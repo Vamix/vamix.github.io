@@ -87,19 +87,25 @@
 
 
 
-<meta name="description" content="背景在这次搭建Hexo博客之前，我曾经使用Wordpress，搭了一个小站（传送门），大半年都没有怎么管理，一来是没有时间，二来，虽然我是计系的本科生，但也没学过Html、css、JavaScript这些东西，对网站建设更是没有经验，经过困难重重的各种查资料搭建好Wordpress之后就没有再去花时间深入研究。后来看到付同学使用Hexo搭建的博客，对这种极简风格的轻量型博客产生了好感，于是用了一个">
+<meta name="description" content="2018年05月13日更新：
+时隔一年半，学了不少新东西，现在回看文章，发现错误颇多，实在汗颜。故予以更正。
+背景在这次搭建Hexo博客之前，我曾经使用Wordpress，搭了一个小站（传送门），大半年都没有怎么管理，一来是没有时间，二来，虽然我是计系的本科生，但也没学过Html、css、JavaScript这些东西，对网站建设更是没有经验，经过困难重重的各种查资料搭建好Wordpress之后就没">
 <meta property="og:type" content="article">
 <meta property="og:title" content="使用Git+Node.js搭建Hexo博客的心得和错误记录">
 <meta property="og:url" content="http://yoursite.com/2017/02/09/使用Git-Node-js搭建Hexo博客的心得和错误记录/index.html">
 <meta property="og:site_name" content="Planet X">
-<meta property="og:description" content="背景在这次搭建Hexo博客之前，我曾经使用Wordpress，搭了一个小站（传送门），大半年都没有怎么管理，一来是没有时间，二来，虽然我是计系的本科生，但也没学过Html、css、JavaScript这些东西，对网站建设更是没有经验，经过困难重重的各种查资料搭建好Wordpress之后就没有再去花时间深入研究。后来看到付同学使用Hexo搭建的博客，对这种极简风格的轻量型博客产生了好感，于是用了一个">
-<meta property="og:image" content="http://i1.piimg.com/567571/9297c031837cc91c.png">
-<meta property="og:image" content="http://ww1.sinaimg.cn/large/6aee7dbbgw1effcq2gx92j210j0ustj7.jpg">
-<meta property="og:updated_time" content="2017-02-09T16:14:40.000Z">
+<meta property="og:description" content="2018年05月13日更新：
+时隔一年半，学了不少新东西，现在回看文章，发现错误颇多，实在汗颜。故予以更正。
+背景在这次搭建Hexo博客之前，我曾经使用Wordpress，搭了一个小站（传送门），大半年都没有怎么管理，一来是没有时间，二来，虽然我是计系的本科生，但也没学过Html、css、JavaScript这些东西，对网站建设更是没有经验，经过困难重重的各种查资料搭建好Wordpress之后就没">
+<meta property="og:image" content="http://vamix.github.io/images/hexo.png">
+<meta property="og:image" content="http://vamix.github.io/images/mao.jpg">
+<meta property="og:updated_time" content="2018-05-13T05:35:07.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用Git+Node.js搭建Hexo博客的心得和错误记录">
-<meta name="twitter:description" content="背景在这次搭建Hexo博客之前，我曾经使用Wordpress，搭了一个小站（传送门），大半年都没有怎么管理，一来是没有时间，二来，虽然我是计系的本科生，但也没学过Html、css、JavaScript这些东西，对网站建设更是没有经验，经过困难重重的各种查资料搭建好Wordpress之后就没有再去花时间深入研究。后来看到付同学使用Hexo搭建的博客，对这种极简风格的轻量型博客产生了好感，于是用了一个">
-<meta name="twitter:image" content="http://i1.piimg.com/567571/9297c031837cc91c.png">
+<meta name="twitter:description" content="2018年05月13日更新：
+时隔一年半，学了不少新东西，现在回看文章，发现错误颇多，实在汗颜。故予以更正。
+背景在这次搭建Hexo博客之前，我曾经使用Wordpress，搭了一个小站（传送门），大半年都没有怎么管理，一来是没有时间，二来，虽然我是计系的本科生，但也没学过Html、css、JavaScript这些东西，对网站建设更是没有经验，经过困难重重的各种查资料搭建好Wordpress之后就没">
+<meta name="twitter:image" content="http://vamix.github.io/images/hexo.png">
 
 
 
@@ -387,7 +393,9 @@
       
 
       
-        <h4 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h4><p>在这次搭建<a href="http://hexo.io" target="_blank" rel="external">Hexo</a>博客之前，我曾经使用<a href="http://wordpress.org" target="_blank" rel="external">Wordpress</a>，搭了一个小站（<a href="http://lgd.ac.cn" target="_blank" rel="external">传送门</a>），大半年都没有怎么管理，一来是没有时间，二来，虽然我是计系的本科生，但也没学过Html、css、JavaScript这些东西，对网站建设更是没有经验，经过困难重重的各种查资料搭建好Wordpress之后就没有再去花时间深入研究。后来看到<a href="https://qingzenholiu.github.io" target="_blank" rel="external">付同学</a>使用Hexo搭建的博客，对这种极简风格的轻量型博客产生了好感，于是用了一个下午的时间研究了一下如何从零开始搭建Hexo博客。</p>
+        <p><em>2018年05月13日更新</em>：</p>
+<p><em>时隔一年半，学了不少新东西，现在回看文章，发现错误颇多，实在汗颜。故予以更正。</em></p>
+<h4 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h4><p>在这次搭建<a href="http://hexo.io" target="_blank" rel="external">Hexo</a>博客之前，我曾经使用<a href="http://wordpress.org" target="_blank" rel="external">Wordpress</a>，搭了一个小站（<a href="http://lgd.ac.cn" target="_blank" rel="external">传送门</a>），大半年都没有怎么管理，一来是没有时间，二来，虽然我是计系的本科生，但也没学过Html、css、JavaScript这些东西，对网站建设更是没有经验，经过困难重重的各种查资料搭建好Wordpress之后就没有再去花时间深入研究。后来看到<a href="https://qingzenholiu.github.io" target="_blank" rel="external">付同学</a>使用Hexo搭建的博客，对这种极简风格的轻量型博客产生了好感，于是用了一个下午的时间研究了一下如何从零开始搭建Hexo博客。</p>
 <p>首先，我回顾了一下搭建Wordpress博客的过程：我先在本地安装了MAMP（我的系统是Mac OS，与Windows对应的是WAMP），用来在本地模拟建站，建好后在阿里云购买了域名和服务器（CentOS），在服务器管理终端安装了WDCP可视化控制面板，用来管理服务器的硬盘，分区，建站。之后使用FTP将网站内容上传至服务器，按照Wordpress自带的提示即可完成建站。</p>
 <a id="more"></a> 
 <p>以后有时间大概会新开一篇写一写如何使用Wordpress建站，以及怎样使用服务器、域名解析等等。给一些零基础的小白提供参考，写这些东西不是因为我是这方面的大神，只是想把当时的一些想法和犯的错记录下来，让其他跟我一样的小白避免在同样的错误上耗费时间吧。</p>
@@ -437,7 +445,8 @@
 <h5 id="Git"><a href="#Git" class="headerlink" title="Git"></a>Git</h5><blockquote>
 <p>Git是一款免费、开源的分布式版本控制系统，用于敏捷高效地处理任何或小或大的项目。Git是一个开源的分布式版本控制系统，可以有效、高速的处理从很小到非常大的项目版本管理。Git 是 Linus Torvalds 为了帮助管理 Linux 内核开发而开发的一个开放源码的版本控制软件。</p>
 </blockquote>
-<p>说实话不是很懂 <em>版本控制软件</em> 是什么意思，不过，在后来我的使用过程中，我发现，Git的功能其实和FTP很像。</p>
+<p><del>说实话不是很懂 <em>版本控制软件</em> 是什么意思，不过，在后来我的使用过程中，我发现，Git的功能其实和FTP很像。</del></p>
+<p>在CMU学习了17-214 Software Construction 后，对于<strong>版本控制软件</strong>有了更深的理解。Git和FTP不能混为一谈。</p>
 <p><strong>FTP</strong></p>
 <blockquote>
 <p>FTP 是File Transfer Protocol（文件传输协议)的英文简称，而中文简称为“文传协议”。用于Internet上的控制文件的双向传输。同时，它也是一个应用程序（Application）。基于不同的操作系统有不同的FTP应用程序，而所有这些应用程序都遵守同一种协议以传输文件。在FTP的使用当中，用户经常遇到两个概念：”下载”（Download）和”上传”（Upload）。”下载”文件就是从远程主机拷贝文件至自己的计算机上；”上传”文件就是将文件从自己的计算机中拷贝至远程主机上。用Internet语言来说，用户可通过客户机程序向（从）远程主机上传（下载）文件。</p>
@@ -463,7 +472,7 @@
 <p>可以分别检查Node.js和 npm 的安装情况。</p>
 <p>以上软件都安装好之后，我们还需要注册一个Github账号，去官网自行注册即可。</p>
 <h4 id="开始建站"><a href="#开始建站" class="headerlink" title="开始建站"></a>开始建站</h4><h5 id="安装Hexo"><a href="#安装Hexo" class="headerlink" title="安装Hexo"></a>安装Hexo</h5><p>其实Hexo的安装过程很简单。进入<a href="https://hexo.io" target="_blank" rel="external">官网</a>我们就能看见以下代码赫然出现在首页：</p>
-<p><img src="http://i1.piimg.com/567571/9297c031837cc91c.png" alt=""></p>
+<p><img src="http://vamix.github.io/images/hexo.png" alt=""></p>
 <p>图中的代码就是安装Hexo的关键代码。</p>
 <p>首先，我们在自己的电脑上新建一个文件夹，名字随便起，比如，就叫blog。</p>
 <p>然后在cmd中使用cd命令进入blog文件夹（以下代码中的blog都指我的博客文件夹名，请在相应代码处替换成你的文件夹名）</p>
@@ -507,13 +516,14 @@
 <li><a href="http://typora.io" target="_blank" rel="external">Typora</a></li>
 </ul>
 <p>这两款软件的区别在于，Mou的界面是左右分栏设计，秉承“所见即所得”的观念，在左边使用markdown语法写的文字，在右边可以实时生成预览效果。</p>
-<p><img src="http://ww1.sinaimg.cn/large/6aee7dbbgw1effcq2gx92j210j0ustj7.jpg" alt=""></p>
+<p><img src="http://vamix.github.io/images/mao.jpg" alt=""></p>
 <p>而Typora则不同，Typora的markdown语法内容会被实时转换成最终效果，<a href="http://typora.io" target="_blank" rel="external">预览效果</a></p>
 <h4 id="建站过程中出现的问题及解决方案"><a href="#建站过程中出现的问题及解决方案" class="headerlink" title="建站过程中出现的问题及解决方案"></a>建站过程中出现的问题及解决方案</h4><h5 id="ERROR-1-Mac-OS-无法安装Hexo"><a href="#ERROR-1-Mac-OS-无法安装Hexo" class="headerlink" title="ERROR 1 Mac OS 无法安装Hexo"></a>ERROR 1 Mac OS 无法安装Hexo</h5><p>最开始我是使用的Mac来建站，因为Git和Node.js都有Mac版呀，我觉得使用起来问题应该不大，但操作过程中出现了许多无法解决的问题，我也曾尝试使用淘宝源，但都无法成功安装Hexo。</p>
 <p>执行<code>npm install hexo-cli -g</code>代码后，使用<code>hexo init</code>命令，总是得到以下错误代码：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ERROR Local hexo not found in ~</div><div class="line">ERROR Try running: &apos;npm install hexo --save&apos;</div></pre></td></tr></table></figure>
 <p>表示Hexo并未成功安装，无法在本地找到Hexo。</p>
 <p>无奈之下换回我的Windows虚拟机，用以上方法在安装过程中没有出现问题。</p>
+<p><em>更新： 当年搭建博客的时候linux用的还不是很溜，针对以上错误信息没有头绪。其实这是因为mac下的文件夹默认没有开启全部的权限，至少在这里，没有执行权限。解决方案是用 <code>chmod -R 777 blog</code> 对整个文件夹赋予所有权限即可。</em></p>
 <h5 id="ERROR-2-Git时提示连接已存在"><a href="#ERROR-2-Git时提示连接已存在" class="headerlink" title="ERROR 2 Git时提示连接已存在"></a>ERROR 2 Git时提示连接已存在</h5><p>有时候使用Git连接Github时会提示</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">fatal: remote origin already exists.</div></pre></td></tr></table></figure>
 <p>这可能是自己之前的误操作导致，输入</p>
@@ -682,7 +692,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-count">4</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
