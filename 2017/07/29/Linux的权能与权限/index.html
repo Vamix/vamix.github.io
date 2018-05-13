@@ -1,0 +1,1170 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="SELinux,Linux,Permissions,Capabilities," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="权限（Permissions）是我们在接触Linux的时候很早就会接触到的一个概念，脑海中直观的印象就是那一串rwxrwxrwx，以至于前几天我在初次听到“权能（Capabilities）”这个词的时候，还以为它们是一回事。后来才知道二者有很大的差别。那么今天我就按自己的理解写一写这两者的区别吧，先从两者的定义聊起。
+定义权限 Permissions
+在Linux中，对文件执行 ls -l   命">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux的权能与权限">
+<meta property="og:url" content="http://yoursite.com/2017/07/29/Linux的权能与权限/index.html">
+<meta property="og:site_name" content="Planet X">
+<meta property="og:description" content="权限（Permissions）是我们在接触Linux的时候很早就会接触到的一个概念，脑海中直观的印象就是那一串rwxrwxrwx，以至于前几天我在初次听到“权能（Capabilities）”这个词的时候，还以为它们是一回事。后来才知道二者有很大的差别。那么今天我就按自己的理解写一写这两者的区别吧，先从两者的定义聊起。
+定义权限 Permissions
+在Linux中，对文件执行 ls -l   命">
+<meta property="og:image" content="http://cn.linux.vbird.org/linux_basic/0210filepermission_files/0210filepermission_3.gif">
+<meta property="og:updated_time" content="2017-07-29T10:43:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux的权能与权限">
+<meta name="twitter:description" content="权限（Permissions）是我们在接触Linux的时候很早就会接触到的一个概念，脑海中直观的印象就是那一串rwxrwxrwx，以至于前几天我在初次听到“权能（Capabilities）”这个词的时候，还以为它们是一回事。后来才知道二者有很大的差别。那么今天我就按自己的理解写一写这两者的区别吧，先从两者的定义聊起。
+定义权限 Permissions
+在Linux中，对文件执行 ls -l   命">
+<meta name="twitter:image" content="http://cn.linux.vbird.org/linux_basic/0210filepermission_files/0210filepermission_3.gif">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"always"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/07/29/Linux的权能与权限/"/>
+
+
+
+
+
+  <title> Linux的权能与权限 | Planet X </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Planet X</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle">Life is Brilliant.</p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-game">
+          <a href="/2048" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heart"></i> <br />
+            
+            游戏
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/29/Linux的权能与权限/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Vamix">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="http://lgd.ac.cn/IMG_0719.JPG">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Planet X">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Planet X" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Linux的权能与权限
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-07-29T18:41:53-04:00">
+                2017-07-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Geek/" itemprop="url" rel="index">
+                    <span itemprop="name">Geek</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/07/29/Linux的权能与权限/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/07/29/Linux的权能与权限/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><strong>权限（Permissions）</strong>是我们在接触Linux的时候很早就会接触到的一个概念，脑海中直观的印象就是那一串rwxrwxrwx，以至于前几天我在初次听到“<strong>权能（Capabilities）</strong>”这个词的时候，还以为它们是一回事。后来才知道二者有很大的差别。<br>那么今天我就按自己的理解写一写这两者的区别吧，先从两者的定义聊起。</p>
+<h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><h4 id="权限-Permissions"><a href="#权限-Permissions" class="headerlink" title="权限 Permissions"></a>权限 Permissions</h4><blockquote>
+<p>在Linux中，对文件执行 <code>ls -l</code>   命令，最前方出现的10个字符就是文件的权限信息。</p>
+</blockquote>
+<p><img src="http://cn.linux.vbird.org/linux_basic/0210filepermission_files/0210filepermission_3.gif" alt=""><br><a id="more"></a>如图所示(图片来自<a href="http://cn.linux.vbird.org/linux_basic/0210filepermission.php#filepermission_perm" target="_blank" rel="external">鸟哥的linux私房菜</a>),每一位都有其相应的含义。</p>
+<ul>
+<li>第一位是文件类型，如果是目录，就为<code>d</code>，否则为 <code>-</code>符号。</li>
+<li>第2-4位是文件或目录拥有者的权限。</li>
+<li>第5-7位是文件或目录所在组的权限。</li>
+<li>第8-10位是该组以外所有用户的访问权限。</li>
+</ul>
+<p>文件的权限总体可以分为三种：r（读），w（写），x（执行）</p>
+<p>除此之外，还有一些文件具有<strong>特殊权限 SetUID、SetGID、Sticky</strong></p>
+<ul>
+<li><p>SetUID 就是让程序在执行过程中拥有文件拥有者的权限。</p>
+<p>如果文件同时具有所有者的执行权限以及SetUID，那么把上述文件权限信息的第4位改为s</p>
+<p>如果文件开启SetUID但关闭执行权限，那么把上述文件权限信息的第4位改为</p>
+<p>例如 <code>-rwsr--r--</code></p>
+</li>
+<li><p>SetGID 就是让程序在执行过程中拥有文件拥有者所在组的权限。</p>
+<p>如果文件同时具有所有者所在组的执行权限以及SetUID，那么把上述文件权限信息的第7位改为s</p>
+<p>如果文件开启SetUID但关闭执行权限，那么把上述文件权限信息的第7位改为</p>
+<p>例如 <code>-rwxr-sr--</code></p>
+</li>
+<li><p>Sticky</p>
+<p>如果目录文件启用本权限位，那么该目录下所有文件仅允许其拥有者去操作，从而避免其他用户的干扰。</p>
+<p>如果其他文件启用本权限位，那么该文件的最后更新时间将不会改变。</p>
+<p>例如 <code>drwxrw-rwt</code></p>
+</li>
+</ul>
+<h5 id="设置UID的两种方法"><a href="#设置UID的两种方法" class="headerlink" title="设置UID的两种方法"></a>设置UID的两种方法</h5><h6 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h6><p><code>chmod  u+s</code>     设置setuid权限</p>
+<p><code>chmod  g+s</code>     设置setgid权限</p>
+<p><code>chmod  o+t</code>     设置stickbit权限</p>
+<p>相应地，</p>
+<p><code>chmod  u-s</code>     删除setuid权限</p>
+<p><code>chmod  g-s</code>     删除setgid权限</p>
+<p><code>chmod  o-t</code>     删除stickbit权限</p>
+<h6 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h6><p><code>chmod  4775</code>     设置setuid权限</p>
+<p><code>chmod  2775</code>     设置setgid权限</p>
+<p><code>chmod  1775</code>     设置stickbit权限</p>
+<p>相应地，使用chmod+三位数字赋予权限，即可删除特殊特殊权限。</p>
+<p>例如<code>chmod 775</code> 即可把相应文件的权限改为 <code>-rwxrwxr-x</code>,没有s位。</p>
+<h4 id="权能"><a href="#权能" class="headerlink" title="权能"></a>权能</h4><blockquote>
+<p>（权能）Capabilities是Linux操作系统对特权操作进行访问控制的一种安全机制。</p>
+</blockquote>
+<p>在最早的Linux操作系统中，进程的特权操作是根据进程的有效用户身份来进行访问控制的。即</p>
+<p><strong>以root为有效用户身份的进程可以进行任何特权操作，而其它用户的进程则不能进行任何特权操作</strong>。</p>
+<p>因此，在Linux系统中以root为有效用户身份的每个进程，不管需不需要，都拥有系统所有的特权。而在大多数情况下，进程完成其服务功能时并不需要什么特权，或仅仅需要很少的几种特权。拥有多余特权对系统安全总是不利的。 </p>
+<p>权能就是针对上面的问题而提出来的，目的在于<strong>实现一种更加细粒度的特权操作的访问控制</strong>，使用户能够根据实际的安全需要来控制一个进程拥有的特权范围，从而能够取消进程的多余特权及多余特权带来的安全隐患。</p>
+<p>权能的主要思想是：将root用户拥有的所有特权分割成多种权能，每种权能代表进行某种特权操作的权限；在系统所有实体中，只有进程和可执行文件具有权能的信息；系统根据一定的策略赋予进程权能，并根据进程拥有的权能来进行特权操作的访问控制。</p>
+<p><strong>简而言之，权能，可以让普通用户完成超级用户才能做的事情，并且极大地降低了系统的风险。</strong></p>
+<h5 id="权能的位图"><a href="#权能的位图" class="headerlink" title="权能的位图"></a>权能的位图</h5><p>每个进程有三个和能力有关的位图:inheritable(I),permitted(P)和effective(E)</p>
+<ul>
+<li><p>cap_effective：Linux内核真正检查的权能集。</p>
+</li>
+<li><p>cap_permitted：表示进程能够使用的能力,在cap_permitted中可以包含cap_effective中没有的能力，这些能力是被进程自己临时放弃的，也可以说cap_effective是cap_permitted的一个子集。</p>
+</li>
+<li><p>cap_inheritable：表示能够被当前进程执行的程序继承的能力。</p>
+</li>
+</ul>
+<h5 id="权能继承规则"><a href="#权能继承规则" class="headerlink" title="权能继承规则"></a>权能继承规则</h5><p>P’(permitted) = (P(inheritable) &amp;F(inheritable)) | (F(permitted) &amp; cap_bset)</p>
+<blockquote>
+<p>新进程的permitted由旧进程的inheritable和可执行文件的inheritable和permitted集及cap_bset运算得到。</p>
+</blockquote>
+<p>P‘(effective) = F’(effective) ? P’(permitted) : 0</p>
+<blockquote>
+<p>新进程的effective集依赖对应可执行文件的effective位如果设置了该为则和旧进程的permitted一样，否则为空。</p>
+</blockquote>
+<p>P’(inheritable) = P(inheritable)</p>
+<blockquote>
+<p>新进程的inheritable直接继承旧进程的Inheritable</p>
+</blockquote>
+<p>P 在执行execve函数前，进程的能力，表示旧进程。</p>
+<p>P’ 在执行execve函数后，进程的能力，表示新进程。</p>
+<p>F 可执行文件的能力。</p>
+<p>cap_bset 系统能力的边界值，在此处默认全为1</p>
+<h5 id="相关操作代码"><a href="#相关操作代码" class="headerlink" title="相关操作代码"></a>相关操作代码</h5><p><strong>查看文件或进程地权能</strong></p>
+<ul>
+<li><p>查看文件的权能    <code>getcap</code></p>
+</li>
+<li><p>查看进程的权能   <code>cap_get_proc</code></p>
+<p>cap_get_proc函数的原型是:cap_t cap_get_proc(void);</p>
+<p>cap_get_proc函数返回当前进程的能力值给cap变量.</p>
+</li>
+</ul>
+<p><strong>设置权能</strong></p>
+<ul>
+<li><p>给文件设置权能   <code>setcap</code></p>
+<p><code>setcap cap_net_raw+ep /bin/ping</code></p>
+<p>+ep即给权能赋予effective和permitted位图</p>
+</li>
+<li><p>给进程设置权能    <code>cap_set_flag</code>  <code>cap_set_proc</code></p>
+<p>cap_set_flag函数的原型是:</p>
+<p><code>int cap_set_flag(cap_t cap_p, cap_flag_t flag, intncap,const cap_value_t *caps, cap_flag_value_t value);</code></p>
+<p>第一个参数cap_p是存放能力值的变量。</p>
+<p>第二个参数flag是是三种能力位图。</p>
+<p>第三个参数ncap是要设定能力的个数。</p>
+<p>第四个参数 <code>*caps</code> 是要设定的能力值,是权能capList数组。</p>
+<p>第五个参数value是决定要设定还是清除。</p>
+<p>cap_set_proc函数的原型是:int cap_set_proc(cap_t cap_p);</p>
+<p>cap_set_proc函数通过cap_p中的能力值设定给当前的进程.</p>
+</li>
+</ul>
+<p><strong>删除权能</strong></p>
+<ul>
+<li><p>删除文件的权能    <code>setcap -r</code></p>
+</li>
+<li><p>删除进程的权能    <code>cap_free</code></p>
+<p>cap_free函数的原型是:cap_free(caps);</p>
+<p>cap_free函数清理/释放cap变量.</p>
+</li>
+</ul>
+<p><strong>初始化</strong></p>
+<p>​ <code>cap_init()</code>函数初始化存放cap能力值的状态</p>
+<h3 id="例子：ping"><a href="#例子：ping" class="headerlink" title="例子：ping"></a>例子：ping</h3><p>我通过ping这个命令，对权能和权限有了一个初步的感受。</p>
+<p>首先，我们可以试着查看一下ping的权限信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">jerry@ubuntu:~$ ls -l /bin/ping</div><div class="line">-rwsr-xr-x. 1 root root 44168 5月   7  2014 /bin/ping</div></pre></td></tr></table></figure>
+<p>我们可以发现，第一组权限的第三位是s，即设置了SetUID，所以，我们可以在普通用户下直接运行ping。</p>
+<p>试一试吧：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">jerry@ubuntu:~$ ping -c 1 127.0.0.1</div><div class="line">PING 127.0.0.1 (127.0.0.1) 56(84) bytes of data.</div><div class="line">64 bytes from 127.0.0.1: icmp_seq=1 ttl=64 time=0.016 ms</div><div class="line"></div><div class="line">--- 127.0.0.1 ping statistics ---</div><div class="line">1 packets transmitted, 1 received, 0% packet loss, time 0ms</div><div class="line">rtt min/avg/max/mdev = 0.016/0.016/0.016/0.000 ms</div></pre></td></tr></table></figure>
+<p>那么，现在试一下把这一位SetUID删掉：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">jerry@ubuntu:~$ sudo chmod u-s /bin/ping</div><div class="line">jerry@ubuntu:~$ ls -l /bin/ping</div><div class="line">-rwxr-xr-x. 1 root root 44168 5月   7  2014 /bin/ping</div></pre></td></tr></table></figure>
+<p>s不见了~</p>
+<p>再试一下ping：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">jerry@ubuntu:~$ ping -c 1 127.0.0.1</div><div class="line">ping: icmp open socket: Operation not permitted</div></pre></td></tr></table></figure>
+<p>太好了，ping不了了。这说明SetUID真的起了作用，使得普通用户可以拥有root用户的特权。</p>
+<p>那么现在可以试一下权能的作用。</p>
+<p>给ping添加 CAP_NET_RAW 权能</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">jerry@ubuntu:~$ sudo setcap cap_net_raw+ep /bin/ping</div><div class="line">jerry@ubuntu:~$ ping -c 1 127.0.0.1</div><div class="line">PING 127.0.0.1 (127.0.0.1) 56(84) bytes of data.</div><div class="line">64 bytes from 127.0.0.1: icmp_seq=1 ttl=64 time=0.021 ms</div><div class="line"></div><div class="line">--- 127.0.0.1 ping statistics ---</div><div class="line">1 packets transmitted, 1 received, 0% packet loss, time 0ms</div><div class="line">rtt min/avg/max/mdev = 0.021/0.021/0.021/0.000 ms</div></pre></td></tr></table></figure>
+<p>然后就可以在普通用户没有SetUID的情况下进行ping啦~</p>
+<p>总的来说，权能的出现加强了系统地安全性，防止了恶意程序利用系统漏洞获取root权限。在嵌入式系统的设计中，如何根据物联网设备的具体情况来进行权能的细粒度划分，将在很大程度上决定我们项目的实用性和可靠性。</p>
+<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><p><a href="http://cn.linux.vbird.org/linux_basic/0210filepermission.php#filepermission_perm" target="_blank" rel="external">鸟哥的linux私房菜</a></p>
+<p><a href="http://cdmd.cnki.com.cn/Article/CDMD-90008-2005030025.htm" target="_blank" rel="external">Linux下Capabilities安全机制的分析与改进</a></p>
+<p>周师兄的PPT</p>
+<h3 id="附：权能列表"><a href="#附：权能列表" class="headerlink" title="附：权能列表"></a>附：权能列表</h3><p>下面的列表展示了 Linux 上实现的权能，以及每种权能允许的操作或行为：</p>
+<ul>
+<li><p><strong>CAP_AUDIT_CONTROL</strong>（自 Linux 2.6.11）</p>
+<p>启用和禁用内核审计；修改审计过滤器规则；提取审计状态和过滤规则。</p>
+</li>
+<li><p><strong>CAP_AUDIT_READ</strong>（自 Linux 3.16）</p>
+<p>允许通过一个多播 netlink socket 读取审计日志。</p>
+</li>
+<li><p><strong>CAP_AUDIT_WRITE</strong>（自 Linux 2.6.11）</p>
+<p>向内核审计日志写记录。</p>
+</li>
+<li><p><strong>CAP_BLOCK_SUSPEND</strong>（自 Linux 3.5）</p>
+<p>可以阻塞系统挂起的特性。</p>
+</li>
+<li><p><strong>CAP_CHOWN</strong></p>
+<p>对文件的 UIDs 和 GIDs 做任意的修改（参考 <strong>chown</strong>(2)）。</p>
+</li>
+<li><p><strong>CAP_DAC_OVERRIDE</strong></p>
+<p>绕过文件的读，写，和执行权限检查。（DAC 是 “discretionary access control” 的缩写。）</p>
+</li>
+<li><p><strong>CAP_DAC_READ_SEARCH</strong></p>
+<ul>
+<li>绕过文件的读权限检查和目录的读和执行权限检查；</li>
+<li>调用 <strong>open_by_handle_at</strong>(2)。</li>
+</ul>
+</li>
+<li><p><strong>CAP_FOWNER</strong></p>
+<ul>
+<li>对于通常要求进程的文件系统 UID 与文件的 UID 匹配的操作，绕过权限检查 (比如，<strong>chmod</strong>(2)，<strong>utime</strong>(2))，除了那些包含在 <strong>CAP_DAC_OVERRIDE</strong> 和 <strong>CAP_DAC_READ_SEARCH</strong> 中的操作；</li>
+<li>为任意文件设置扩展文件属性(参考 <strong>chattr</strong>(1))；</li>
+<li>为任意文件设置访问控制表(ACLs)；</li>
+<li>对文件删除操作忽略目录的 sticky 位；</li>
+<li>在 <strong>open</strong>(2) 和 <strong>fcntl</strong>(2) 任意文件时设置 <strong>O_NOATIME</strong>。</li>
+</ul>
+</li>
+<li><p><strong>CAP_FSETID</strong></p>
+<p>当文件修改时不清除 set-user-ID 和 set-group-ID 模式位；为文件 GID 与调用进程的文件系统或补充 GIDs 不匹配的文件设置 set-group-ID 位。</p>
+</li>
+<li><p><strong>CAP_IPC_LOCK</strong></p>
+<p>锁定内存 (<strong>mlock</strong>(2)，<strong>mlockall</strong>(2)，<strong>mmap</strong>(2)，<strong>shmctl</strong>(2))。</p>
+</li>
+<li><p><strong>CAP_IPC_OWNER</strong></p>
+<p>绕过对 System V IPC 对象的操作的权限检查。</p>
+</li>
+<li><p><strong>CAP_KILL</strong></p>
+<p>绕过发送信号 (参考 <strong>kill</strong>(2)) 时的权限检查。这包括使用 <strong>ioctl</strong>(2) <strong>KDSIGACCEPT</strong> 操作。</p>
+</li>
+<li><p><strong>CAP_LEASE</strong>（自 Linux 2.4）</p>
+<p>为任意文件建立租约 (参考 <strong>fcntl</strong>(2))。</p>
+</li>
+<li><p><strong>CAP_LINUX_IMMUTABLE</strong></p>
+<p>设置<strong>FS_APPEND_FL</strong> 和 <strong>FS_IMMUTABLE_FL</strong> inode 标记 (参考 <strong>chattr</strong>(1))。</p>
+</li>
+<li><p><strong>CAP_MAC_ADMIN</strong>（自 Linux 2.6.25）</p>
+<p>覆盖强制访问控制 (Mandatory Access Control (MAC)). 为 Smack Linux 安全模块(Linux Security Module (LSM)) 而实现。</p>
+</li>
+<li><p><strong>CAP_MAC_OVERRIDE</strong>（自 Linux 2.6.25）</p>
+<p>允许 MAC 配置或状态改变。为 Smack LSM 而实现。</p>
+</li>
+<li><p><strong>CAP_MKNOD</strong>（自 Linux 2.4）</p>
+<p>使用 <strong>mknod</strong>(2) 创建特殊文件。</p>
+</li>
+<li><p><strong>CAP_NET_ADMIN</strong></p>
+<p>执行多种网络有关的操作：</p>
+<ul>
+<li>接口配置；</li>
+</ul>
+<ul>
+<li>IP 防火墙，地址伪装，和账单管理；</li>
+<li>修改路由表；</li>
+<li>为透明代理绑定任何地址；</li>
+<li>设置服务类性 (type-of-service (TOS))；</li>
+<li>清理驱动统计资料；</li>
+<li>设置混杂模式；</li>
+<li>启用组播；</li>
+<li>使用 <strong>setsockopt</strong>(2) 设置下列 socket 选项：<strong>SO_DEBUG</strong>，<strong>SO_MARK</strong>，<strong>SO_PRIORITY</strong> (在0到6范围之外的优先级)，<strong>SO_RCVBUFFORCE</strong>，和 <strong>SO_SNDBUFFORCE</strong>。</li>
+</ul>
+</li>
+<li><p><strong>CAP_NET_BIND_SERVICE</strong></p>
+<p>将一个 socket 绑定到一个互联网域特权端口 (端口号小于 1024)。</p>
+</li>
+<li><p><strong>CAP_NET_BROADCAST</strong></p>
+<p>(未使用) 使 socket 发送组播，并监听组播。</p>
+</li>
+<li><p><strong>CAP_NET_RAW</strong></p>
+<ul>
+<li>使用 RAW 和 PACKET sockets；</li>
+</ul>
+<ul>
+<li>为透明代理绑定任何地址。</li>
+</ul>
+</li>
+<li><p><strong>CAP_SETGID</strong></p>
+<p>执行任意的进程 GIDs 和补充 GID 列表管理；当通过 UNIX 域 sockets 传递 socket 认证信息时伪造 GID；在一个用户命名空间 (参考 <strong>user_namespaces</strong>(7)) 中写入组 ID 映射。</p>
+</li>
+<li><p><strong>CAP_SYS_ADMIN</strong></p>
+<ul>
+<li>执行一系列系统管理操作，包括：<strong>quotactl</strong>(2)，<strong>mount</strong>(2)，<strong>umount</strong>(2)，<strong>swapon</strong>(2)，<strong>swapoff</strong>(2)，<strong>sethostname</strong>(2)，和 <strong>setdomainname</strong>(2)；</li>
+</ul>
+<ul>
+<li>执行特权 syslog(2) 操作 (自 Linux 2.6.37 开始，应该使用 CAP_SYSLOG 来允许这一操作)；</li>
+<li>执行 <strong>VM86_REQUEST_IRQ vm86</strong>(2) 命令；</li>
+<li>对任意 System V IPC 对象执行 IPC_SET 和 IPC_RMID 操作；</li>
+<li>覆盖 RLIMIT_NPROC 资源限制；</li>
+<li>执行 trusted 和 security Extended Attributes (see <strong>xattr</strong>(7)) 操作；</li>
+<li>使用 <strong>lookup_dcookie</strong>(2)；</li>
+<li>使用 ioprio_set(2) 来分配 IOPRIO_CLASS_RT 和 (Linux 2.6.25 之前) IOPRIO_CLASS_IDLE I/O 调度类别；</li>
+<li>当通过 UNIX 域 sockets 传递 socket 认证信息时伪装 PID；</li>
+<li>在系统调用打开文件 (比如，<strong>accept</strong>(2)，<strong>execve</strong>(2)，<strong>open</strong>(2)，<strong>pipe</strong>(2)) 时，超出 /proc/sys/fs/file-max，系统范围内打开文件数的限制；</li>
+<li>通过 <strong>clone</strong>(2) 和 <strong>unshare</strong>(2) 使用 <strong>CLONE_* </strong>标记创建新的命名空间（但是，自从 Linux 3.8 开始，创建命名空间不需要任何权能）；</li>
+<li>调用 <strong>perf_event_open</strong>(2)；</li>
+<li>访问特权 perf 事件信息；</li>
+<li>调用 <strong>setns</strong>(2) (在目标命名空间中需要 CAP_SYS_ADMIN)；</li>
+<li>调用 <strong>fanotify_init</strong>(2)；</li>
+<li>调用 <strong>bpf</strong>(2)；</li>
+<li>执行 <strong>KEYCTL_CHOWN</strong> 和 <strong>KEYCTL_SETPERM keyctl</strong>(2) 操作；</li>
+<li>执行 <strong>madvise</strong>(2) <strong>MADV_HWPOISON</strong> 操作；</li>
+<li>使用 <strong>TIOCSTI ioctl</strong>(2) 向一个终端的输入队列中插入字符，而不是调用者的控制终端；</li>
+<li>使用废弃的 <strong>nfsservctl </strong>(2) 系统调用；</li>
+<li>使用废弃的 <strong>bdflush </strong>(2) 系统调用；</li>
+<li>执行各种特权的块设备 <strong>ioctl</strong>(2) 操作；</li>
+<li>执行各种特权的文件系统 <strong>ioctl</strong>(2) 操作；</li>
+<li>对许多设备驱动执行管理操作。</li>
+</ul>
+</li>
+<li><p><strong>CAP_SYS_BOOT</strong></p>
+<p>使用 <strong>reboot</strong>(2) 和 <strong>kexec_load</strong>(2)。</p>
+</li>
+<li><p><strong>CAP_SYS_CHROOT</strong></p>
+<p>使用 <strong>chroot</strong>(2)。</p>
+</li>
+<li><p><strong>CAP_SYS_MODULE</strong></p>
+<p>加载和卸载内核模块(参考 <strong>init_module</strong>(2) 和 <strong>delete_module</strong>(2))；在 2.6.25 之前的内核中：从系统范围内的权能边界集合中丢弃权能。</p>
+</li>
+<li><p><strong>CAP_SYS_NICE</strong></p>
+<ul>
+<li>触发进程 nice 值 (<strong>nice</strong>(2)，<strong>setpriority</strong>(2)) 和为任意进程改变 nice 值；</li>
+</ul>
+<ul>
+<li>为调用进程设置实时调度策略，及为任意进程设置调度策略和优先级 (<strong>sched_setscheduler</strong>(2)，<strong>sched_setparam</strong>(2)，<strong>shed_setattr</strong>(2))；</li>
+<li>为任意进程设置 CPU affinity (<strong>sched_setaffinity</strong>(2))；</li>
+<li>为任意进程设置 I/O 调度类别和优先级 (<strong>ioprio_set</strong>(2))；</li>
+<li>对任意进程应用 <strong>migrate_pages</strong>(2) 并允许进程被迁移到任意节点；</li>
+<li>对任意进程应用 <strong>move_pages</strong>(2)；</li>
+<li>在 <strong>mbind</strong>(2) 和 <strong>move_pages</strong>(2) 中使用 <strong>MPOL_MF_MOVE_ALL</strong> 标记。</li>
+</ul>
+</li>
+<li><p><strong>CAP_SYS_PACCT</strong></p>
+<p>使用 <strong>acct</strong>(2)。</p>
+</li>
+<li><p><strong>CAP_SYS_PTRACE</strong></p>
+<ul>
+<li>使用 <strong>ptrace</strong>(2) 追踪任意进程；</li>
+</ul>
+<ul>
+<li>对任意进程应用 <strong>get_robust_list</strong>(2)；</li>
+<li>使用 <strong>process_vm_readv</strong>(2) 和 <strong>process_vm_writev</strong>(2) 同任意进程的内存传输数据；</li>
+<li>使用 <strong>kcmp</strong>(2) 检查进程。</li>
+</ul>
+</li>
+<li><p><strong>CAP_SYS_RAWIO</strong></p>
+<ul>
+<li>执行 I/O 端口操作 (<strong>iopl</strong>(2) 和 <strong>ioperm</strong>(2))；</li>
+</ul>
+<ul>
+<li>访问 /proc/kcore；</li>
+<li>使用 <strong>FIBMAP ioctl</strong>(2) 操作；</li>
+<li>打开设备访问 x86 模式特有寄存器 (MSRs，参考 <strong>msr</strong>(4))；</li>
+<li>更新 /proc/sys/vm/mmap_min_addr；</li>
+<li>在地址低于 /proc/sys/vm/mmap_min_addr 的位置创建内存映射；</li>
+<li>在 /proc/bus/pci 中映射文件；</li>
+<li>打开 /dev/mem 和 /dev/kmem；</li>
+<li>执行各种 SCSI 设备命令；</li>
+<li>在 <strong>hpsa</strong>(4) 和 <strong>cciss</strong>(4) 设备上执行某一操作；</li>
+<li>在其它设备上执行一系列设备特有操作。</li>
+</ul>
+</li>
+<li><p><strong>CAP_SYS_RESOURCE</strong></p>
+<ul>
+<li>使用 ext2 文件系统上的预留空间；</li>
+</ul>
+<ul>
+<li>执行 ioctl(2) 调用控制 ext3 日志；</li>
+<li>覆盖磁盘配额限制；</li>
+<li>增加资源限制 (参考 <strong>setrlimit</strong>(2))；</li>
+<li>覆盖 RLIMIT_NPROC 资源限制；</li>
+<li>在终端分配上覆盖最大的终端数；</li>
+<li>覆盖最大的 keymaps 个数；</li>
+<li>允许实时时钟中断大于64 hz；</li>
+<li>触发一个 System V 消息队列的 msg_qbytes 限制超过 /proc/sys/kernel/msgmnb 中的限制 (参考 <strong>msgop</strong>(2) 和 <strong>msgctl</strong>(2))；</li>
+<li>当使用 <strong>F_SETPIPE_SZ fcntl</strong>(2) 命令设置一个管道的容量时覆盖 /proc/sys/fs/pipe-size-max 的限制；</li>
+<li>使用 <strong>F_SETPIPE_SZ</strong> 增加管道的容量超出 /proc/sys/fs/pipe-max-size 指定的限制；</li>
+<li>当创建 POSIX 消息队列 (参考 <strong>mq_overview</strong>(7)) 时覆盖 /proc/sys/fs/mqueue/queues_max 的限制；</li>
+<li>使用 <strong>prctl</strong>(2) <strong>PR_SET_MM</strong> 操作；</li>
+<li>设置 /proc/PID/oom_score_adj 为一个小于由一个具有 CAP_SYS_RESOURCE 的进程最近设置的值的值。</li>
+</ul>
+</li>
+<li><p><strong>CAP_SYS_TIME</strong></p>
+<p>设置系统时钟 (<strong>settimeofday</strong>(2)，<strong>stime</strong>(2)，<strong>adjtimex</strong>(2))；设置实时 (硬件) 时钟。</p>
+</li>
+<li><p><strong>CAP_SYS_TTY_CONFIG</strong></p>
+<p>使用 <strong>vhangup</strong>(2)；对虚拟终端使用各种特权 <strong>ioctl</strong>(2) 操作。</p>
+</li>
+<li><p><strong>CAP_SYSLOG</strong> (自 Linux 2.6.37)</p>
+<ul>
+<li>执行特权 <strong>syslog</strong>(2) 操作。参考 <strong>syslog</strong>(2) 来获取哪些操作需要特权的信息；</li>
+</ul>
+<ul>
+<li>当 /proc/sys/kernel/kptr_restrict 值为 1 时，查看通过 /proc 和其它接口暴露</li>
+<li>的内核地址。(参考 <strong>proc</strong>(5) 中 kptr_restrict 的讨论。)</li>
+</ul>
+</li>
+<li><p><strong>CAP_WAKE_ALARM</strong> (自 Linux 3.0)</p>
+<p>触发将唤醒系统的东西 (设置 CLOCK_REALTIME_ALARM 和 CLOCK_BOOTTIME_ALARM 定时器)。</p>
+</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/SELinux/" rel="tag"># SELinux</a>
+          
+            <a href="/tags/Linux/" rel="tag"># Linux</a>
+          
+            <a href="/tags/Permissions/" rel="tag"># Permissions</a>
+          
+            <a href="/tags/Capabilities/" rel="tag"># Capabilities</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/07/26/SELinux初探/" rel="next" title="SELinux初探">
+                <i class="fa fa-chevron-left"></i> SELinux初探
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/13/test-post/" rel="prev" title="test post">
+                test post <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://lgd.ac.cn/IMG_0719.JPG"
+               alt="Vamix" />
+          <p class="site-author-name" itemprop="name">Vamix</p>
+          <p class="site-description motion-element" itemprop="description">Life is Brilliant.</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/vamix" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/guodong6" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://gdliu.tuchong.com" target="_blank" title="图虫">
+                  
+                    <i class="fa fa-fw fa-camera"></i>
+                  
+                  图虫
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-link"></i>
+              友情链接
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://lgd.ac.cn/" title="果壳生活网" target="_blank">果壳生活网</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://vamix.me/" title="Planet X" target="_blank">Planet X</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://qingzenholiu.github.io/" title="FLQ" target="_blank">FLQ</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+        
+
+
+<div id="kong">
+
+</div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#定义"><span class="nav-number">1.</span> <span class="nav-text">定义</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#权限-Permissions"><span class="nav-number">1.1.</span> <span class="nav-text">权限 Permissions</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#设置UID的两种方法"><span class="nav-number">1.1.1.</span> <span class="nav-text">设置UID的两种方法</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#方法一"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">方法一</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#方法二"><span class="nav-number">1.1.1.2.</span> <span class="nav-text">方法二</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#权能"><span class="nav-number">1.2.</span> <span class="nav-text">权能</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#权能的位图"><span class="nav-number">1.2.1.</span> <span class="nav-text">权能的位图</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#权能继承规则"><span class="nav-number">1.2.2.</span> <span class="nav-text">权能继承规则</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#相关操作代码"><span class="nav-number">1.2.3.</span> <span class="nav-text">相关操作代码</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#例子：ping"><span class="nav-number">2.</span> <span class="nav-text">例子：ping</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考资料"><span class="nav-number">3.</span> <span class="nav-text">参考资料</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#附：权能列表"><span class="nav-number">4.</span> <span class="nav-text">附：权能列表</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        ﻿<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-hand-o-right"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Vamix</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a> 
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+<div id="days">
+<script src="https://cdn.bootcss.com/moment.js/2.17.0/moment.min.js">
+</script>
+<script>
+	var begin = moment([2017,01,08]); 
+	var now = moment(); 
+    document.getElementById('days').innerHTML ="Planet X 已运行 "+now.diff(begin,'days')+" 天"
+</script>
+</div>
+<div class="cnzz">
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261243839'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261243839' type='text/javascript'%3E%3C/script%3E"));</script>
+</div>
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'planet-x';
+      var disqus_identifier = '2017/07/29/Linux的权能与权限/';
+
+      var disqus_title = "Linux的权能与权限";
+
+
+      function run_disqus_script(disqus_script) {
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

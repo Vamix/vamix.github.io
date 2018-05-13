@@ -1,0 +1,920 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="SELinux,Linux,LSM,Flask," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="SELinux的定义​        SELinux(Security-Enhanced Linux 是Linux的一个强制访问控制(MAC)安全模块，由NSA（The National Security Agency） 和SCC（Secure Computing Corporation）开发，是 Linux 上最杰出的新安全子系统。它通过LSM(Linux Security Modules)框架">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SELinux初探">
+<meta property="og:url" content="http://yoursite.com/2017/07/26/SELinux初探/index.html">
+<meta property="og:site_name" content="Planet X">
+<meta property="og:description" content="SELinux的定义​        SELinux(Security-Enhanced Linux 是Linux的一个强制访问控制(MAC)安全模块，由NSA（The National Security Agency） 和SCC（Secure Computing Corporation）开发，是 Linux 上最杰出的新安全子系统。它通过LSM(Linux Security Modules)框架">
+<meta property="og:image" content="http://img.blog.csdn.net/20130819105233687?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvTXlBcnJvdw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="https://www.ibm.com/developerworks/cn/linux/s-selinux/fig3.gif">
+<meta property="og:image" content="http://img.blog.csdn.net/20130809153255828?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvTXlBcnJvdw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:updated_time" content="2017-07-26T14:06:23.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SELinux初探">
+<meta name="twitter:description" content="SELinux的定义​        SELinux(Security-Enhanced Linux 是Linux的一个强制访问控制(MAC)安全模块，由NSA（The National Security Agency） 和SCC（Secure Computing Corporation）开发，是 Linux 上最杰出的新安全子系统。它通过LSM(Linux Security Modules)框架">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20130819105233687?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvTXlBcnJvdw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"always"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/07/26/SELinux初探/"/>
+
+
+
+
+
+  <title> SELinux初探 | Planet X </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Planet X</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle">Life is Brilliant.</p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-game">
+          <a href="/2048" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heart"></i> <br />
+            
+            游戏
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/26/SELinux初探/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Vamix">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="http://lgd.ac.cn/IMG_0719.JPG">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Planet X">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Planet X" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                SELinux初探
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-07-26T19:16:28-04:00">
+                2017-07-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Geek/" itemprop="url" rel="index">
+                    <span itemprop="name">Geek</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/07/26/SELinux初探/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/07/26/SELinux初探/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="SELinux的定义"><a href="#SELinux的定义" class="headerlink" title="SELinux的定义"></a>SELinux的定义</h3><p>​        SELinux(Security-Enhanced Linux 是Linux的一个强制访问控制(MAC)安全模块，由NSA（The National Security Agency） 和SCC（Secure Computing Corporation）开发，是 Linux 上最杰出的新安全子系统。它通过<strong>LSM(Linux Security Modules)</strong>框架被集成到Linux Kernel 2.6.x中。</p>
+<p>​        笔者对SELinux最简单直观的理解是：一个进程的主体只能访问到它完成任务所需要的<strong>最少的文件</strong>，只能执行它完成任务所需的<strong>最少的操作</strong>，不再授予任何任何更高的权限。<a id="more"></a></p>
+<h4 id="访问控制方法的比较"><a href="#访问控制方法的比较" class="headerlink" title="访问控制方法的比较"></a>访问控制方法的比较</h4><h5 id="自主访问控制-DAC"><a href="#自主访问控制-DAC" class="headerlink" title="自主访问控制 DAC"></a>自主访问控制 DAC</h5><p>​        基于 UNIX® 的系统使用一种<em>自主访问控制（discretionary access control，DAC）</em>的形式。此方法通常根据对象所属的分组来限制对对象的访问。例如，Linux 中的文件有一个所有者、一个分组和一个权限集。权限定义谁可以访问给定文件、谁可以读取它、谁可以向其写入，以及谁可以执行它。（即在Linux中对某个文件使用ls -l 命令看到的 -rwxrwxrwx）</p>
+<p>​        存在的问题：    </p>
+<ul>
+<li>文件目录的所有者可以对文件进行所有的操作，这给系统整体的管理带来不便</li>
+<li>SUID程序的权限升级:如果设置了SUID权限的程序有漏洞的话，<br>就很容易被攻击者所利用</li>
+</ul>
+<h5 id="强制访问控制-MAC"><a href="#强制访问控制-MAC" class="headerlink" title="强制访问控制 MAC"></a>强制访问控制 MAC</h5><p>​        使用<strong>最小特权原则</strong> ：程序只能执行完成任务所需的操作。限制主体或发起者访问或对对象(客体)执行某种操作的能力。主体通常指用户，或代表用户意图运行进程或设备，对象可能是文件、目录、TCP/UDP端口、共享内存段、I/O设备等。主体和对象各自具有一组安全属性。每当主体尝试访问对象时，都会由操作系统内核强制施行授权规则——检查安全属性并决定是否可进行访问。任何对象对任何对象的任何操作都将根据一组授权规则（也称策略）进行测试，决定操作是否允许。</p>
+<h5 id="基于角色的访问控制-RBAC"><a href="#基于角色的访问控制-RBAC" class="headerlink" title="基于角色的访问控制 RBAC"></a>基于角色的访问控制 RBAC</h5><p>​        在 RBAC 中，权限是根据安全系统所授予的角色来提供的。角色的概念与传统的分组概念不同，因为一个分组代表一个或多个用户。一个角色可以代表多个用户，但它也代表一个用户集可以执行的权限。</p>
+<p><strong>SELinux将MAC和RBAC都添加到了Linux中。</strong></p>
+<h3 id="安全上下文"><a href="#安全上下文" class="headerlink" title="安全上下文"></a>安全上下文</h3><p>​        所有操作系统访问控制都是以关联的客体和主体的某种类型的访问控制属性为基础的。在SELinux中，访问控制属性叫做<strong>安全上下文</strong>。所有客体和主体都有与其关联的安全上下文，一个安全上下文由三部分组成：用户(USER)、角色(ROLE) 和类型标识符(TYPE)。常常用下面的格式指定或显示安全上下文：</p>
+<p>​    <code>USER：ROLE：TYPE [ LEVEL [：CATEGORY] ]</code></p>
+<h4 id="USER-用户"><a href="#USER-用户" class="headerlink" title="USER (用户)"></a>USER (用户)</h4><ul>
+<li>User Identity：类似Linux系统中的UID，提供身份识别，用来记录身份；安全上下文的一部分；</li>
+<li>三种常见的 user:<ul>
+<li>user_u ：普通用户登录系统后的预设；</li>
+<li>system_u ：开机过程中系统进程的预设；</li>
+<li>root ：root 登录后的预设；</li>
+</ul>
+</li>
+<li>在 targeted policy 中 users 不是很重要；在strict policy 中比较重要，所有预设的 SELinux Users 都是以 “_u” 结尾的，root 除外。</li>
+</ul>
+<h4 id="ROLE-角色"><a href="#ROLE-角色" class="headerlink" title="ROLE (角色)"></a>ROLE (角色)</h4><ul>
+<li>文件、目录和设备的role：通常是 object_r；</li>
+<li>程序的role：通常是 system_r；</li>
+<li>用户的role：targeted policy为system_r； strict policy为sysadm_r、staff_r、user_r；用户的role，类似系统中的GID，不同角色具备不同的的权限；用户可以具备多个role；但是同一时间内只能使用一个role；        </li>
+<li>使用基于RBAC(Roles Based Access Control) 的strict和mls策略中，用来存储角色信息</li>
+</ul>
+<h4 id="TYPE-类型标识符"><a href="#TYPE-类型标识符" class="headerlink" title="TYPE (类型标识符)"></a>TYPE (类型标识符)</h4><ul>
+<li>type用来将主体和客体划分为不同的组，给每个主体和系统中的客体定义了一个类型；<ul>
+<li>当一个类型与执行中的进程相关联时，其type也称为domain；</li>
+</ul>
+</li>
+<li>为进程运行提供最低的权限环境；</li>
+<li>type是SElinux security context 中<strong>最重要的部位</strong>，是 SELinux Type Enforcement 的心脏，预设值以_t结尾；</li>
+<li>需要特别指出的是，因为SELinux的主要访问控制特性是类型强制，安全上下文中的类型标识符决定了访问权。</li>
+</ul>
+<p><strong>Tips：</strong>SELinux只是在标准Linux基础上增加了类型强制(TE: Type Enforcement)，这就意味着标准Linux和SELinux访问控制都必须满足先要能访问一个客体，例如：如果我们对某个文件有SELinux写入权限，但我们没有该文件的w许可，那么我们也不能写该文件。</p>
+<h3 id="Linux安全模块（LSM）"><a href="#Linux安全模块（LSM）" class="headerlink" title="Linux安全模块（LSM）"></a>Linux安全模块（LSM）</h3><p>​        在很久以前，有很多类似于SELinux的安全访问控制模型和框架被研究和开发出来，用以增强Linux系统的安全性，但是由于没有一个系统能够获得统治性的地位而进入Linux内核成为标准；并且这些系统都大多<strong>以各种不同的内核补丁的形式</strong>提供，使用这些系统需要有编译和定制内核的能力，对于没有内核开发经验的普通用户，获得并使用这些系统是有难度的。</p>
+<p>​        Linux内核的创始人Linus Torvalds指出Linux内核确实需要一个<strong>通用的安全访问控制框架</strong>，但他指出最好是通过可加载内核模块的方法，这样可以支持现存的各种不同的安全访问控制系统。因此，Linux安全模块（LSM）应运而生。</p>
+<p>​        Linux安全模块（LSM）是Linux内核的一个轻量级通用访问控制框架。它使得各种不同的安全访问控制模型能够以Linux可加载内核模块的形式实现出来，用户可以根据其需求选择适合的安全模块加载到Linux内核中，从而大大提高了Linux安全访问控制机制的灵活性和易用性。目前已经有很多著名的增强访问控制系统移植到Linux安全模块（LSM）上实现，包括POSIX.1e capabilities，安全增强Linux（SELinux），域和类型增强（DTE），以及Linux入侵检测系统（LIDS）等等。</p>
+<p>​        SElinux就是通过LSM框架集成到Linux系统中的：</p>
+<p><img src="http://img.blog.csdn.net/20130819105233687?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvTXlBcnJvdw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="SELinux and LSM"></p>
+<h3 id="SELinux的体系结构"><a href="#SELinux的体系结构" class="headerlink" title="SELinux的体系结构"></a>SELinux的体系结构</h3><h4 id="FLASK架构"><a href="#FLASK架构" class="headerlink" title="FLASK架构"></a>FLASK架构</h4><p>​        整个安全性体系结构称为 Flask。</p>
+<p>​        在 Flask 体系结构中，<strong>安全性策略的逻辑</strong>和<strong>通用接口</strong>一起封装在与操作系统<strong>独立的组件</strong>中。</p>
+<p>​        这个单独的组件称为<strong>安全性服务器</strong>（虽然它只是个内核子系统而已）。该服务器的 SELinux 实现定义了一种混合的安全性策略，由类型实施 (TE)、基于角色的访问控制 (RBAC) 和可选的多级别安全性 (MLS) 组成，所以广泛用于军事安全性中。</p>
+<p>​        <strong>通用接口</strong>用于获得<strong>安全性策略</strong>决策。</p>
+<p><img src="https://www.ibm.com/developerworks/cn/linux/s-selinux/fig3.gif" alt="FLASK结构图"></p>
+<h4 id="SELinux运行机制"><a href="#SELinux运行机制" class="headerlink" title="SELinux运行机制"></a>SELinux运行机制</h4><p><img src="http://img.blog.csdn.net/20130809153255828?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvTXlBcnJvdw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt=""></p>
+<p>​        当一个subject(如: 一个应用)试图访问一个object(如：一个文件)，Kernel中的策略执行服务器将检查AVC (Access Vector Cache), 在AVC中，subject和object的权限被缓存(cached)。如果基于AVC中的数据不能做出决定，则请求安全服务器，安全服务器在一个矩阵中查找“应用+文件”的安全环境。然后根据查询结果允许或拒绝访问，拒绝消息细节位于/var/log/messages中。</p>
+<h3 id="SELinux的相关操作"><a href="#SELinux的相关操作" class="headerlink" title="SELinux的相关操作"></a>SELinux的相关操作</h3><h4 id="SELinux-配置文件"><a href="#SELinux-配置文件" class="headerlink" title="SELinux 配置文件"></a>SELinux 配置文件</h4><p>​        在Ubuntu系统下，/etc/selinux/是存放所有策略文件和主要配置文件的目录。</p>
+<p>​        配置文件位于：<strong>/etc/selinux/config</strong></p>
+<p>​        编辑配置文件，其中包含如下配置选项：</p>
+<ul>
+<li><p>打开或关闭SELinux及设置SELinux的状态（permissive|enforcing）</p>
+<p>SELINUX=enforcing|permissive|disabled </p>
+<p>​        • enforcing — The SELinux security policy is enforced.</p>
+<pre><code>• permissive — The SELinux system prints warnings but does not enforce policy.
+
+• disabled — SELinux is fully disabled. 
+</code></pre></li>
+<li><p>设置系统执行哪一个策略（targeted|strict ）</p>
+<p>SELINUXTYPE=targeted|strict </p>
+<p>​    • targeted — 只有目标网络daemons保护</p>
+<p>​    • strict — 对SELinux执行完全的保护。为所有的subjects和objects定义安全环境，且每一个Action由策略执行服务器处理。提供符合Role-based-Access Control(RBAC)之policy，具备完整的保护功能，保护网络服务、一般指令及应用程序</p>
+</li>
+<li><p>控制如何设置本地定义(users|booleans)</p>
+<p>SETLOCALDEFS=0|1</p>
+<p>​        • 1：这些定义由load_policy控制，load_policy来自于文件/etc/selinux/<policyname></policyname></p>
+<p>​        • 0：由semanage控制</p>
+</li>
+</ul>
+<h4 id="SELinux工具（命令）"><a href="#SELinux工具（命令）" class="headerlink" title="SELinux工具（命令）"></a>SELinux工具（命令）</h4><h5 id="sestatus-v"><a href="#sestatus-v" class="headerlink" title="sestatus -v"></a>sestatus -v</h5><p>​        显示系统的详细状态</p>
+<h5 id="getenforce"><a href="#getenforce" class="headerlink" title="getenforce"></a>getenforce</h5><p>​        显示SELinux当前状态（disabled|enforcing|permissive）</p>
+<h5 id="setenforce"><a href="#setenforce" class="headerlink" title="setenforce"></a>setenforce</h5><p>​        修改SELinux运行模式</p>
+<p>​    • setenforce 1 — SELinux以强制(enforcing)模式运行</p>
+<pre><code>• setenforce 0 — SELinux以警告(permissive)模式运行
+</code></pre><p>​    为了关闭SELinux，可以修改配置文件，改为disabled</p>
+<h5 id="getsebool-a"><a href="#getsebool-a" class="headerlink" title="getsebool -a"></a>getsebool -a</h5><p>​        查看所有布尔值</p>
+<p>​        后接相应的布尔值变量名可以查看单个布尔值</p>
+<h5 id="setsebool"><a href="#setsebool" class="headerlink" title="setsebool"></a>setsebool</h5><p>​        设置布尔值，参数-P，永久性设置。</p>
+<p>​        例如：<code>setsebool -P ftpd_disable_trans 1</code></p>
+<h5 id="文件操作"><a href="#文件操作" class="headerlink" title="文件操作"></a>文件操作</h5><h6 id="ls-Z"><a href="#ls-Z" class="headerlink" title="ls -Z"></a>ls -Z</h6><p>​        查看安全上下文。例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">jerry@ubuntu:~$ ls -Z a.txt</div><div class="line">system_u:object_r:file_t:s0 a.txt</div></pre></td></tr></table></figure>
+<h6 id="chcon"><a href="#chcon" class="headerlink" title="chcon"></a><strong>chcon</strong></h6><pre><code>更改文件的标签。例如：
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">jerry@ubuntu:~$ chcon -t etc_t a.txt</div><div class="line">jerry@ubuntu:~$ ls -Z a.txt</div><div class="line">system_u:object_r:etc_t:s0 a.txt</div></pre></td></tr></table></figure>
+<h6 id="restorecon"><a href="#restorecon" class="headerlink" title="restorecon"></a>restorecon</h6><pre><code>当这个文件在策略里有定义时，可以恢复原来的文件标签。
+</code></pre><h6 id="cp"><a href="#cp" class="headerlink" title="cp"></a><strong>cp</strong></h6><pre><code>可以跟 -Z 在拷贝的时候指定目的地文件的安全上下文
+</code></pre><h6 id="find"><a href="#find" class="headerlink" title="find"></a>find</h6><pre><code>可以跟 –context 查特定的type的文件
+</code></pre><h5 id="ps-Z"><a href="#ps-Z" class="headerlink" title="ps -Z"></a>ps -Z</h5><pre><code>查看当前正在运行的进程的安全上下文（进程domain的确认）
+</code></pre><h5 id="id-Z"><a href="#id-Z" class="headerlink" title="id -Z"></a>id -Z</h5><pre><code>显示你的shell的安全上下文
+</code></pre><h5 id="模块操作"><a href="#模块操作" class="headerlink" title="模块操作"></a>模块操作</h5><h6 id="checkmodule"><a href="#checkmodule" class="headerlink" title="checkmodule"></a>checkmodule</h6><pre><code>编译模块
+</code></pre><h6 id="semodule-package"><a href="#semodule-package" class="headerlink" title="semodule_package"></a>semodule_package</h6><pre><code>创建新的模块
+</code></pre><h6 id="semodule"><a href="#semodule" class="headerlink" title="semodule"></a>semodule</h6><pre><code>可以显示、加载、删除模块
+</code></pre><h5 id="semanage"><a href="#semanage" class="headerlink" title="semanage"></a>semanage</h5><pre><code>这是一个功能强大的策略管理工具，有了它即使没有策略的源代码，也可以管理安全策略。
+</code></pre><h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><ul>
+<li><a href="https://www.ibm.com/developerworks/cn/linux/l-lsm/part1/index.html" target="_blank" rel="external">如何增强 Linux系统的安全性，第一部分：Linux 安全模块（LSM）简介</a></li>
+<li><a href="http://blog.csdn.net/myarrow/article/details/9856095" target="_blank" rel="external">SELinux深入理解_MyArrow的专栏</a></li>
+<li><a href="http://blog.csdn.net/myarrow/article/details/9839377" target="_blank" rel="external">SELinux 简介_MyArrow的专栏</a></li>
+<li><a href="https://wenku.baidu.com/view/8bb29cecf8c75fbfc77db2b4.html" target="_blank" rel="external">SELinux安全机制和安全目的研究 黄易冬 沈廷芝 朱亚平</a></li>
+<li><a href="http://www.cnblogs.com/gailuo/p/5041034.html" target="_blank" rel="external">SELinux工作原理</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/安全增强式Linux" target="_blank" rel="external">安全增强式Linux_Wikipedia</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/SELinux/" rel="tag"># SELinux</a>
+          
+            <a href="/tags/Linux/" rel="tag"># Linux</a>
+          
+            <a href="/tags/LSM/" rel="tag"># LSM</a>
+          
+            <a href="/tags/Flask/" rel="tag"># Flask</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/02/09/使用Git-Node-js搭建Hexo博客的心得和错误记录/" rel="next" title="使用Git+Node.js搭建Hexo博客的心得和错误记录">
+                <i class="fa fa-chevron-left"></i> 使用Git+Node.js搭建Hexo博客的心得和错误记录
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/07/29/Linux的权能与权限/" rel="prev" title="Linux的权能与权限">
+                Linux的权能与权限 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://lgd.ac.cn/IMG_0719.JPG"
+               alt="Vamix" />
+          <p class="site-author-name" itemprop="name">Vamix</p>
+          <p class="site-description motion-element" itemprop="description">Life is Brilliant.</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/vamix" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/guodong6" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://gdliu.tuchong.com" target="_blank" title="图虫">
+                  
+                    <i class="fa fa-fw fa-camera"></i>
+                  
+                  图虫
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-link"></i>
+              友情链接
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://lgd.ac.cn/" title="果壳生活网" target="_blank">果壳生活网</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://vamix.me/" title="Planet X" target="_blank">Planet X</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://qingzenholiu.github.io/" title="FLQ" target="_blank">FLQ</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+        
+
+
+<div id="kong">
+
+</div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#SELinux的定义"><span class="nav-number">1.</span> <span class="nav-text">SELinux的定义</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#访问控制方法的比较"><span class="nav-number">1.1.</span> <span class="nav-text">访问控制方法的比较</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#自主访问控制-DAC"><span class="nav-number">1.1.1.</span> <span class="nav-text">自主访问控制 DAC</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#强制访问控制-MAC"><span class="nav-number">1.1.2.</span> <span class="nav-text">强制访问控制 MAC</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#基于角色的访问控制-RBAC"><span class="nav-number">1.1.3.</span> <span class="nav-text">基于角色的访问控制 RBAC</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安全上下文"><span class="nav-number">2.</span> <span class="nav-text">安全上下文</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#USER-用户"><span class="nav-number">2.1.</span> <span class="nav-text">USER (用户)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ROLE-角色"><span class="nav-number">2.2.</span> <span class="nav-text">ROLE (角色)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TYPE-类型标识符"><span class="nav-number">2.3.</span> <span class="nav-text">TYPE (类型标识符)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Linux安全模块（LSM）"><span class="nav-number">3.</span> <span class="nav-text">Linux安全模块（LSM）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SELinux的体系结构"><span class="nav-number">4.</span> <span class="nav-text">SELinux的体系结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#FLASK架构"><span class="nav-number">4.1.</span> <span class="nav-text">FLASK架构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SELinux运行机制"><span class="nav-number">4.2.</span> <span class="nav-text">SELinux运行机制</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SELinux的相关操作"><span class="nav-number">5.</span> <span class="nav-text">SELinux的相关操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#SELinux-配置文件"><span class="nav-number">5.1.</span> <span class="nav-text">SELinux 配置文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SELinux工具（命令）"><span class="nav-number">5.2.</span> <span class="nav-text">SELinux工具（命令）</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#sestatus-v"><span class="nav-number">5.2.1.</span> <span class="nav-text">sestatus -v</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#getenforce"><span class="nav-number">5.2.2.</span> <span class="nav-text">getenforce</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#setenforce"><span class="nav-number">5.2.3.</span> <span class="nav-text">setenforce</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#getsebool-a"><span class="nav-number">5.2.4.</span> <span class="nav-text">getsebool -a</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#setsebool"><span class="nav-number">5.2.5.</span> <span class="nav-text">setsebool</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#文件操作"><span class="nav-number">5.2.6.</span> <span class="nav-text">文件操作</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#ls-Z"><span class="nav-number">5.2.6.1.</span> <span class="nav-text">ls -Z</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#chcon"><span class="nav-number">5.2.6.2.</span> <span class="nav-text">chcon</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#restorecon"><span class="nav-number">5.2.6.3.</span> <span class="nav-text">restorecon</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#cp"><span class="nav-number">5.2.6.4.</span> <span class="nav-text">cp</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#find"><span class="nav-number">5.2.6.5.</span> <span class="nav-text">find</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ps-Z"><span class="nav-number">5.2.7.</span> <span class="nav-text">ps -Z</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#id-Z"><span class="nav-number">5.2.8.</span> <span class="nav-text">id -Z</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#模块操作"><span class="nav-number">5.2.9.</span> <span class="nav-text">模块操作</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#checkmodule"><span class="nav-number">5.2.9.1.</span> <span class="nav-text">checkmodule</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#semodule-package"><span class="nav-number">5.2.9.2.</span> <span class="nav-text">semodule_package</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#semodule"><span class="nav-number">5.2.9.3.</span> <span class="nav-text">semodule</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#semanage"><span class="nav-number">5.2.10.</span> <span class="nav-text">semanage</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考资料"><span class="nav-number">6.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        ﻿<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-hand-o-right"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Vamix</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a> 
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+<div id="days">
+<script src="https://cdn.bootcss.com/moment.js/2.17.0/moment.min.js">
+</script>
+<script>
+	var begin = moment([2017,01,08]); 
+	var now = moment(); 
+    document.getElementById('days').innerHTML ="Planet X 已运行 "+now.diff(begin,'days')+" 天"
+</script>
+</div>
+<div class="cnzz">
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261243839'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261243839' type='text/javascript'%3E%3C/script%3E"));</script>
+</div>
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'planet-x';
+      var disqus_identifier = '2017/07/26/SELinux初探/';
+
+      var disqus_title = "SELinux初探";
+
+
+      function run_disqus_script(disqus_script) {
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
