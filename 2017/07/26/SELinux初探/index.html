@@ -93,14 +93,14 @@
 <meta property="og:url" content="http://yoursite.com/2017/07/26/SELinux初探/index.html">
 <meta property="og:site_name" content="Planet X">
 <meta property="og:description" content="SELinux的定义​        SELinux(Security-Enhanced Linux 是Linux的一个强制访问控制(MAC)安全模块，由NSA（The National Security Agency） 和SCC（Secure Computing Corporation）开发，是 Linux 上最杰出的新安全子系统。它通过LSM(Linux Security Modules)框架">
-<meta property="og:image" content="http://img.blog.csdn.net/20130819105233687?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvTXlBcnJvdw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:image" content="https://www.ibm.com/developerworks/cn/linux/s-selinux/fig3.gif">
-<meta property="og:image" content="http://img.blog.csdn.net/20130809153255828?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvTXlBcnJvdw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:updated_time" content="2017-07-26T14:06:23.000Z">
+<meta property="og:image" content="http://vamix.github.io/images/SELinux-1.png">
+<meta property="og:image" content="http://vamix.github.io/images/SELinux-2.png">
+<meta property="og:image" content="http://vamix.github.io/images/SELinux-3.png">
+<meta property="og:updated_time" content="2018-05-13T05:40:26.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SELinux初探">
 <meta name="twitter:description" content="SELinux的定义​        SELinux(Security-Enhanced Linux 是Linux的一个强制访问控制(MAC)安全模块，由NSA（The National Security Agency） 和SCC（Secure Computing Corporation）开发，是 Linux 上最杰出的新安全子系统。它通过LSM(Linux Security Modules)框架">
-<meta name="twitter:image" content="http://img.blog.csdn.net/20130819105233687?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvTXlBcnJvdw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta name="twitter:image" content="http://vamix.github.io/images/SELinux-1.png">
 
 
 
@@ -431,13 +431,13 @@
 <p>​        Linux内核的创始人Linus Torvalds指出Linux内核确实需要一个<strong>通用的安全访问控制框架</strong>，但他指出最好是通过可加载内核模块的方法，这样可以支持现存的各种不同的安全访问控制系统。因此，Linux安全模块（LSM）应运而生。</p>
 <p>​        Linux安全模块（LSM）是Linux内核的一个轻量级通用访问控制框架。它使得各种不同的安全访问控制模型能够以Linux可加载内核模块的形式实现出来，用户可以根据其需求选择适合的安全模块加载到Linux内核中，从而大大提高了Linux安全访问控制机制的灵活性和易用性。目前已经有很多著名的增强访问控制系统移植到Linux安全模块（LSM）上实现，包括POSIX.1e capabilities，安全增强Linux（SELinux），域和类型增强（DTE），以及Linux入侵检测系统（LIDS）等等。</p>
 <p>​        SElinux就是通过LSM框架集成到Linux系统中的：</p>
-<p><img src="http://img.blog.csdn.net/20130819105233687?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvTXlBcnJvdw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="SELinux and LSM"></p>
+<p><img src="http://vamix.github.io/images/SELinux-1.png" alt="SELinux and LSM"></p>
 <h3 id="SELinux的体系结构"><a href="#SELinux的体系结构" class="headerlink" title="SELinux的体系结构"></a>SELinux的体系结构</h3><h4 id="FLASK架构"><a href="#FLASK架构" class="headerlink" title="FLASK架构"></a>FLASK架构</h4><p>​        整个安全性体系结构称为 Flask。</p>
 <p>​        在 Flask 体系结构中，<strong>安全性策略的逻辑</strong>和<strong>通用接口</strong>一起封装在与操作系统<strong>独立的组件</strong>中。</p>
 <p>​        这个单独的组件称为<strong>安全性服务器</strong>（虽然它只是个内核子系统而已）。该服务器的 SELinux 实现定义了一种混合的安全性策略，由类型实施 (TE)、基于角色的访问控制 (RBAC) 和可选的多级别安全性 (MLS) 组成，所以广泛用于军事安全性中。</p>
 <p>​        <strong>通用接口</strong>用于获得<strong>安全性策略</strong>决策。</p>
-<p><img src="https://www.ibm.com/developerworks/cn/linux/s-selinux/fig3.gif" alt="FLASK结构图"></p>
-<h4 id="SELinux运行机制"><a href="#SELinux运行机制" class="headerlink" title="SELinux运行机制"></a>SELinux运行机制</h4><p><img src="http://img.blog.csdn.net/20130809153255828?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvTXlBcnJvdw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt=""></p>
+<p><img src="http://vamix.github.io/images/SELinux-2.png" alt="FLASK结构图"></p>
+<h4 id="SELinux运行机制"><a href="#SELinux运行机制" class="headerlink" title="SELinux运行机制"></a>SELinux运行机制</h4><p><img src="http://vamix.github.io/images/SELinux-3.png" alt=""></p>
 <p>​        当一个subject(如: 一个应用)试图访问一个object(如：一个文件)，Kernel中的策略执行服务器将检查AVC (Access Vector Cache), 在AVC中，subject和object的权限被缓存(cached)。如果基于AVC中的数据不能做出决定，则请求安全服务器，安全服务器在一个矩阵中查找“应用+文件”的安全环境。然后根据查询结果允许或拒绝访问，拒绝消息细节位于/var/log/messages中。</p>
 <h3 id="SELinux的相关操作"><a href="#SELinux的相关操作" class="headerlink" title="SELinux的相关操作"></a>SELinux的相关操作</h3><h4 id="SELinux-配置文件"><a href="#SELinux-配置文件" class="headerlink" title="SELinux 配置文件"></a>SELinux 配置文件</h4><p>​        在Ubuntu系统下，/etc/selinux/是存放所有策略文件和主要配置文件的目录。</p>
 <p>​        配置文件位于：<strong>/etc/selinux/config</strong></p>
