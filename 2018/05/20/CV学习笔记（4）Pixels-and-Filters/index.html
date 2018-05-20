@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="CV," />
 
 
 
@@ -87,16 +87,33 @@
 
 
 
-<meta name="description" content="Life is Brilliant.">
+<meta name="description" content="Images as functionsAn Image is a function $f$ from $R^2$ to $R^M$: 
+$f( x, y )$ gives the intensity at position $( x, y )$ .
+For black and white image: 
+$f: [a,b] x [c,d] \rightarrow [0,255]$
+For colo">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CV学习笔记（4）Pixels and Filters">
 <meta property="og:url" content="http://yoursite.com/2018/05/20/CV学习笔记（4）Pixels-and-Filters/index.html">
 <meta property="og:site_name" content="Planet X">
-<meta property="og:description" content="Life is Brilliant.">
-<meta property="og:updated_time" content="2018-05-20T01:11:14.000Z">
+<meta property="og:description" content="Images as functionsAn Image is a function $f$ from $R^2$ to $R^M$: 
+$f( x, y )$ gives the intensity at position $( x, y )$ .
+For black and white image: 
+$f: [a,b] x [c,d] \rightarrow [0,255]$
+For colo">
+<meta property="og:image" content="http://vamix.github.io/images/CV-4-1.png">
+<meta property="og:image" content="http://vamix.github.io/images/CV-4-2.png">
+<meta property="og:image" content="http://vamix.github.io/images/CV-4-3.png">
+<meta property="og:image" content="http://vamix.github.io/images/CV-4-4.png">
+<meta property="og:updated_time" content="2018-05-20T16:11:11.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CV学习笔记（4）Pixels and Filters">
-<meta name="twitter:description" content="Life is Brilliant.">
+<meta name="twitter:description" content="Images as functionsAn Image is a function $f$ from $R^2$ to $R^M$: 
+$f( x, y )$ gives the intensity at position $( x, y )$ .
+For black and white image: 
+$f: [a,b] x [c,d] \rightarrow [0,255]$
+For colo">
+<meta name="twitter:image" content="http://vamix.github.io/images/CV-4-1.png">
 
 
 
@@ -327,6 +344,28 @@
           </span>
 
           
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/计算机视觉/" itemprop="url" rel="index">
+                    <span itemprop="name">计算机视觉</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
 
           
             
@@ -363,7 +402,54 @@
       
 
       
-        
+        <h4 id="Images-as-functions"><a href="#Images-as-functions" class="headerlink" title="Images as functions"></a>Images as functions</h4><p>An Image is a function $f$ from $R^2$ to $R^M$: </p>
+<p>$f( x, y )$ gives the intensity at position $( x, y )$ .</p>
+<p>For black and white image: </p>
+<p>$f: [a,b] x [c,d] \rightarrow [0,255]$</p>
+<p>For color image: </p>
+<p>$f(x, y) = \begin{bmatrix} r(x, y) \\ g(x, y) \\ b(x, y) \\\end{bmatrix}$</p>
+<h4 id="Linear-Systems-filters"><a href="#Linear-Systems-filters" class="headerlink" title="Linear Systems (filters)"></a>Linear Systems (filters)</h4><h5 id="Filtering"><a href="#Filtering" class="headerlink" title="Filtering:"></a>Filtering:</h5><p>Form a new image whose pixels are a combination of original pixel values.</p>
+<p><strong>Filters are 2D discrete-space systems.</strong></p>
+<h5 id="Filter-example-1-Moving-Average"><a href="#Filter-example-1-Moving-Average" class="headerlink" title="Filter example #1: Moving Average"></a>Filter example #1: Moving Average</h5><p>$g[n,m] = \frac{1}{9} \sum_{k = n-1}^{n+1}\sum_{l=m-1}^{m+1}f[k, l]$</p>
+<p>Replace each pixel with an average of its neighborhood.</p>
+<p>Achieve smoothing effect.</p>
+<p><img src="http://vamix.github.io/images/CV-4-1.png" alt=""></p>
+<p><img src="http://vamix.github.io/images/CV-4-2.png" alt=""></p>
+<h5 id="Filter-example-2-Image-Segmentation"><a href="#Filter-example-2-Image-Segmentation" class="headerlink" title="Filter example #2: Image Segmentation"></a>Filter example #2: Image Segmentation</h5><p>$g[n, m] = \begin{cases} 255, &amp; f[n, m] &gt; 100 \\ 0, &amp; \text{otherwise}\end{cases}$</p>
+<p><img src="http://vamix.github.io/images/CV-4-3.png" alt=""></p>
+<h5 id="Classification-of-Systems"><a href="#Classification-of-Systems" class="headerlink" title="Classification of Systems"></a>Classification of Systems</h5><h6 id="Amplitude-properties"><a href="#Amplitude-properties" class="headerlink" title="Amplitude properties"></a>Amplitude properties</h6><ul>
+<li><strong>Linearity  线性</strong></li>
+<li>Stability  稳定性</li>
+<li>Invertibility  可逆性</li>
+</ul>
+<h6 id="Spatial-properties"><a href="#Spatial-properties" class="headerlink" title="Spatial properties"></a>Spatial properties</h6><ul>
+<li>Causality  因果性</li>
+<li>Separability  可分性</li>
+<li>Memory  记忆性</li>
+<li>Shift invariance  平移不变性</li>
+<li>Rotation invariance  旋转不变性</li>
+</ul>
+<h4 id="Convolution-卷积-vs-Correlation-相关"><a href="#Convolution-卷积-vs-Correlation-相关" class="headerlink" title="Convolution(卷积) vs Correlation(相关)"></a>Convolution(卷积) vs Correlation(相关)</h4><h5 id="Convolution-symbol"><a href="#Convolution-symbol" class="headerlink" title="Convolution (symbol: *)"></a>Convolution (symbol: *)</h5><p>$G[i, j] = \sum_{u = -k}^{k}\sum_{v = -k}^{k}H[u, v]F[i-u, j-v]$</p>
+<p>$\Rightarrow G = H * F$</p>
+<p><em>The result flips in both dimension, bottom to top, right to left.</em></p>
+<p>A convolution is an integral that expresses the amount of overlap of one function as it is shifted over another function.</p>
+<blockquote>
+<p><strong>Convolution is a filtering operation.</strong></p>
+</blockquote>
+<h5 id="Correlation-symbol"><a href="#Correlation-symbol" class="headerlink" title="Correlation (symbol: **)"></a>Correlation (symbol: **)</h5><p>$G[i, j] = \sum_{u = -k}^{k}\sum_{v = -k}^{k}H[u, v]F[i+u, j+v]$</p>
+<p>$\Rightarrow G = H ** F$</p>
+<p>Correlation compares the <strong>similarity</strong> of two sets of data. </p>
+<p>Correlation computes a measure of similarity of two input signals as they are shifted by one another.</p>
+<p>The correlation result reaches a maximum at the time when the two signals match best.</p>
+<blockquote>
+<p><strong>Correlation is a measure of relatedness of two signals.</strong></p>
+</blockquote>
+<h5 id="Convolution-vs-Correlation"><a href="#Convolution-vs-Correlation" class="headerlink" title="Convolution vs Correlation"></a>Convolution vs Correlation</h5><ul>
+<li>For a symmetric filter, convolution and correlation are the same.</li>
+<li>image for convolution and correlation:</li>
+</ul>
+<p><img src="http://vamix.github.io/images/CV-4-4.png" alt=""></p>
+
       
     </div>
 
@@ -383,6 +469,12 @@
 
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/CV/" rel="tag"># CV</a>
+          
+        </div>
       
 
       
@@ -450,8 +542,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="http://lgd.ac.cn/IMG_0719.JPG"
@@ -560,6 +661,23 @@
 </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Images-as-functions"><span class="nav-number">1.</span> <span class="nav-text">Images as functions</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Linear-Systems-filters"><span class="nav-number">2.</span> <span class="nav-text">Linear Systems (filters)</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Filtering"><span class="nav-number">2.1.</span> <span class="nav-text">Filtering:</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Filter-example-1-Moving-Average"><span class="nav-number">2.2.</span> <span class="nav-text">Filter example #1: Moving Average</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Filter-example-2-Image-Segmentation"><span class="nav-number">2.3.</span> <span class="nav-text">Filter example #2: Image Segmentation</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Classification-of-Systems"><span class="nav-number">2.4.</span> <span class="nav-text">Classification of Systems</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#Amplitude-properties"><span class="nav-number">2.4.1.</span> <span class="nav-text">Amplitude properties</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#Spatial-properties"><span class="nav-number">2.4.2.</span> <span class="nav-text">Spatial properties</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Convolution-卷积-vs-Correlation-相关"><span class="nav-number">3.</span> <span class="nav-text">Convolution(卷积) vs Correlation(相关)</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Convolution-symbol"><span class="nav-number">3.1.</span> <span class="nav-text">Convolution (symbol: *)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Correlation-symbol"><span class="nav-number">3.2.</span> <span class="nav-text">Correlation (symbol: **)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Convolution-vs-Correlation"><span class="nav-number">3.3.</span> <span class="nav-text">Convolution vs Correlation</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+
+      <!--/noindex-->
       
 
     </div>
@@ -730,6 +848,28 @@
   
 
   
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
 
   
 
