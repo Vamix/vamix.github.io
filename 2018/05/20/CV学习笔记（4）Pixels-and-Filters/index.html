@@ -105,7 +105,7 @@ For colo">
 <meta property="og:image" content="http://vamix.github.io/images/CV-4-2.png">
 <meta property="og:image" content="http://vamix.github.io/images/CV-4-3.png">
 <meta property="og:image" content="http://vamix.github.io/images/CV-4-4.png">
-<meta property="og:updated_time" content="2018-05-20T16:11:11.000Z">
+<meta property="og:updated_time" content="2018-05-20T16:22:02.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CV学习笔记（4）Pixels and Filters">
 <meta name="twitter:description" content="Images as functionsAn Image is a function $f$ from $R^2$ to $R^M$: 
@@ -408,15 +408,31 @@ For colo">
 <p>$f: [a,b] x [c,d] \rightarrow [0,255]$</p>
 <p>For color image: </p>
 <p>$f(x, y) = \begin{bmatrix} r(x, y) \\ g(x, y) \\ b(x, y) \\\end{bmatrix}$</p>
+<a id="more"></a>
 <h4 id="Linear-Systems-filters"><a href="#Linear-Systems-filters" class="headerlink" title="Linear Systems (filters)"></a>Linear Systems (filters)</h4><h5 id="Filtering"><a href="#Filtering" class="headerlink" title="Filtering:"></a>Filtering:</h5><p>Form a new image whose pixels are a combination of original pixel values.</p>
 <p><strong>Filters are 2D discrete-space systems.</strong></p>
 <h5 id="Filter-example-1-Moving-Average"><a href="#Filter-example-1-Moving-Average" class="headerlink" title="Filter example #1: Moving Average"></a>Filter example #1: Moving Average</h5><p>$g[n,m] = \frac{1}{9} \sum_{k = n-1}^{n+1}\sum_{l=m-1}^{m+1}f[k, l]$</p>
 <p>Replace each pixel with an average of its neighborhood.</p>
 <p>Achieve smoothing effect.</p>
-<p><img src="http://vamix.github.io/images/CV-4-1.png" alt=""></p>
-<p><img src="http://vamix.github.io/images/CV-4-2.png" alt=""></p>
+<div align="center">
+
+<img src="http://vamix.github.io/images/CV-4-1.png" width="200" alt="图片名称" align="center">
+
+</div>
+
+<div align="center">
+
+<img src="http://vamix.github.io/images/CV-4-2.png" height="150" alt="图片名称" align="center">
+
+</div>
+
 <h5 id="Filter-example-2-Image-Segmentation"><a href="#Filter-example-2-Image-Segmentation" class="headerlink" title="Filter example #2: Image Segmentation"></a>Filter example #2: Image Segmentation</h5><p>$g[n, m] = \begin{cases} 255, &amp; f[n, m] &gt; 100 \\ 0, &amp; \text{otherwise}\end{cases}$</p>
-<p><img src="http://vamix.github.io/images/CV-4-3.png" alt=""></p>
+<div align="center">
+
+<img src="http://vamix.github.io/images/CV-4-3.png" height="150" alt="图片名称" align="center">
+
+</div>
+
 <h5 id="Classification-of-Systems"><a href="#Classification-of-Systems" class="headerlink" title="Classification of Systems"></a>Classification of Systems</h5><h6 id="Amplitude-properties"><a href="#Amplitude-properties" class="headerlink" title="Amplitude properties"></a>Amplitude properties</h6><ul>
 <li><strong>Linearity  线性</strong></li>
 <li>Stability  稳定性</li>
@@ -448,7 +464,12 @@ For colo">
 <li>For a symmetric filter, convolution and correlation are the same.</li>
 <li>image for convolution and correlation:</li>
 </ul>
-<p><img src="http://vamix.github.io/images/CV-4-4.png" alt=""></p>
+<div align="center">
+
+<img src="http://vamix.github.io/images/CV-4-4.png" height="150" alt="图片名称" align="center">
+
+</div>
+
 
       
     </div>
