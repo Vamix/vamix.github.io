@@ -2,10 +2,8 @@
 
 
 
-  
 
-
-<html class="theme-next mist use-motion" lang="zh-Hans">
+<html class="theme-next pisces" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -71,7 +69,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="操作系统, 复习笔记," />
+  <meta name="keywords" content="操作系统,复习笔记," />
 
 
 
@@ -87,30 +85,27 @@
 
 
 
-<meta name="description" content="整理：@刘国栋
-第二章  进程与线程2.1  进程
+<meta name="description" content="第二章  进程与线程2.1  进程
 不管是只有一个CPU的计算机还是多CPU的计算机，都支持(伪)并发操作的能力。 
 进程是用于描述并行的一种概念模型。从概念上来说，每个进程拥有它自己的虚拟CPU。
-一个进程就是一个正在执行的程序的实例。包括程序计数器、寄存器和变量的当前值。实际上只有一个物理程序计数器，所以在每个程序运行时，它的逻辑程序计数器被装入实际的程序计数器中。当该程序执行">
+一个进程就是一个正在执行的程序的实例。包括程序计数器、寄存器和变量的当前值。实际上只有一个物理程序计数器，所以在每个程序运行时，它的逻辑程序计数器被装入实际的程序计数器中。当该程序执行结束（或暂停执行">
 <meta property="og:type" content="article">
 <meta property="og:title" content="《操作系统》复习笔记">
 <meta property="og:url" content="http://yoursite.com/2018/06/05/《操作系统》复习笔记/index.html">
 <meta property="og:site_name" content="Planet X">
-<meta property="og:description" content="整理：@刘国栋
-第二章  进程与线程2.1  进程
+<meta property="og:description" content="第二章  进程与线程2.1  进程
 不管是只有一个CPU的计算机还是多CPU的计算机，都支持(伪)并发操作的能力。 
 进程是用于描述并行的一种概念模型。从概念上来说，每个进程拥有它自己的虚拟CPU。
-一个进程就是一个正在执行的程序的实例。包括程序计数器、寄存器和变量的当前值。实际上只有一个物理程序计数器，所以在每个程序运行时，它的逻辑程序计数器被装入实际的程序计数器中。当该程序执行">
-<meta property="og:image" content="http://vamix.github.io/images/复习笔记-图片/操作系统/x-1.png">
-<meta property="og:updated_time" content="2020-01-15T02:06:30.779Z">
+一个进程就是一个正在执行的程序的实例。包括程序计数器、寄存器和变量的当前值。实际上只有一个物理程序计数器，所以在每个程序运行时，它的逻辑程序计数器被装入实际的程序计数器中。当该程序执行结束（或暂停执行">
+<meta property="og:image" content="http://yoursite.com/images/review-notes/os/x-1.png">
+<meta property="og:updated_time" content="2020-09-07T16:53:12.170Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="《操作系统》复习笔记">
-<meta name="twitter:description" content="整理：@刘国栋
-第二章  进程与线程2.1  进程
+<meta name="twitter:description" content="第二章  进程与线程2.1  进程
 不管是只有一个CPU的计算机还是多CPU的计算机，都支持(伪)并发操作的能力。 
 进程是用于描述并行的一种概念模型。从概念上来说，每个进程拥有它自己的虚拟CPU。
-一个进程就是一个正在执行的程序的实例。包括程序计数器、寄存器和变量的当前值。实际上只有一个物理程序计数器，所以在每个程序运行时，它的逻辑程序计数器被装入实际的程序计数器中。当该程序执行">
-<meta name="twitter:image" content="http://vamix.github.io/images/复习笔记-图片/操作系统/x-1.png">
+一个进程就是一个正在执行的程序的实例。包括程序计数器、寄存器和变量的当前值。实际上只有一个物理程序计数器，所以在每个程序运行时，它的逻辑程序计数器被装入实际的程序计数器中。当该程序执行结束（或暂停执行">
+<meta name="twitter:image" content="http://yoursite.com/images/review-notes/os/x-1.png">
 
 
 
@@ -118,10 +113,10 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Mist',
+    scheme: 'Pisces',
     sidebar: {"position":"left","display":"always"},
     fancybox: true,
-    motion: true,
+    motion: false,
     duoshuo: {
       userId: '0',
       author: '博主'
@@ -233,32 +228,12 @@
         </li>
       
         
-        <li class="menu-item menu-item-tags">
-          <a href="/tags" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
-            
-            标签
-          </a>
-        </li>
-      
-        
         <li class="menu-item menu-item-about">
-          <a href="http://lgd.gd" rel="section">
+          <a href="/about" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
             
             关于
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-game">
-          <a href="/2048" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-heart"></i> <br />
-            
-            游戏
           </a>
         </li>
       
@@ -296,7 +271,7 @@
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="Vamix">
     <meta itemprop="description" content="">
-    <meta itemprop="image" content="http://vamix.github.io/images/avatar.jpg">
+    <meta itemprop="image" content="/images/avatar.jpg">
   </span>
 
   <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -341,6 +316,28 @@
           </span>
 
           
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/System/" itemprop="url" rel="index">
+                    <span itemprop="name">System</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
 
           
             
@@ -377,15 +374,12 @@
       
 
       
-        <p>整理：@刘国栋</p>
-<h3 id="第二章-进程与线程"><a href="#第二章-进程与线程" class="headerlink" title="第二章  进程与线程"></a>第二章  进程与线程</h3><h4 id="2-1-进程"><a href="#2-1-进程" class="headerlink" title="2.1  进程"></a>2.1  进程</h4><ul>
+        <h3 id="第二章-进程与线程"><a href="#第二章-进程与线程" class="headerlink" title="第二章  进程与线程"></a>第二章  进程与线程</h3><h4 id="2-1-进程"><a href="#2-1-进程" class="headerlink" title="2.1  进程"></a>2.1  进程</h4><ul>
 <li>不管是只有一个CPU的计算机还是多CPU的计算机，都支持(伪)并发操作的能力。 </li>
 <li>进程是<strong>用于描述并行的一种概念模型</strong>。从概念上来说，<strong>每个进程拥有它自己的虚拟CPU</strong>。</li>
-<li><strong>一个进程就是一个正在执行的程序的实例</strong>。包括程序计数器、寄存器和变量的当前值。实际上只有一个物理程序计数器，所以在每个程序运行时，它的逻辑程序计数器被装入实际的程序计数器中。当该程序执行结束（或暂停执行）时，物理程序计数器被保存在内存中该进程的逻辑程序计数器中。</li>
-<li>在任何一个瞬间，一个CPU只能运行一个进程。</li>
-</ul>
-<a id="more"></a> 
-<ul>
+<li><strong>一个进程就是一个正在执行的程序的实例</strong>。包括程序计数器、寄存器和变量的当前值。实际上只有一个物理程序计数器，所以在每个程序运行时，它的逻辑程序计数器被装入实际的程序计数器中。当该程序执行结束（或暂停执行）时，物理程序计数器被保存在内存中该进程的逻辑程序计数器中。<a id="more"></a> </li>
+<li><p>在任何一个瞬间，一个CPU只能运行一个进程。</p>
+</li>
 <li><p><strong>进程的创建</strong>有4种主要方式：</p>
 <ul>
 <li>系统初始化</li>
@@ -1182,7 +1176,7 @@
 </ul>
 <h3 id="补充内容"><a href="#补充内容" class="headerlink" title="补充内容"></a>补充内容</h3><h4 id="程序内存空间"><a href="#程序内存空间" class="headerlink" title="程序内存空间"></a>程序内存空间</h4><div align="center">
 
-<img src="http://vamix.github.io/images/复习笔记-图片/操作系统/x-1.png" width="200">
+<img src="/images/review-notes/os/x-1.png" width="200">
 
 </div>
 
@@ -1242,7 +1236,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/操作系统-复习笔记/" rel="tag"># 操作系统, 复习笔记</a>
+            <a href="/tags/操作系统/" rel="tag"># 操作系统</a>
+          
+            <a href="/tags/复习笔记/" rel="tag"># 复习笔记</a>
           
         </div>
       
@@ -1254,10 +1250,6 @@
       
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
-            
-              <a href="/2018/06/01/TensorFlow-学习笔记（1）入门/" rel="next" title="TensorFlow 学习笔记-入门篇">
-                <i class="fa fa-chevron-left"></i> TensorFlow 学习笔记-入门篇
-              </a>
             
           </div>
 
@@ -1329,7 +1321,7 @@
       <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
-               src="http://vamix.github.io/images/avatar.jpg"
+               src="/images/avatar.jpg"
                alt="Vamix" />
           <p class="site-author-name" itemprop="name">Vamix</p>
           <p class="site-description motion-element" itemprop="description">Life is Brilliant.</p>
@@ -1339,7 +1331,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-count">3</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1348,7 +1340,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-count">5</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1356,10 +1348,10 @@
 
           
             <div class="site-state-item site-state-tags">
-              <a href="/tags">
+              
                 <span class="site-state-item-count">16</span>
                 <span class="site-state-item-name">标签</span>
-              </a>
+              
             </div>
           
 
@@ -1380,15 +1372,6 @@
               </span>
             
               <span class="links-of-author-item">
-                <a href="http://weibo.com/guodong6" target="_blank" title="微博">
-                  
-                    <i class="fa fa-fw fa-weibo"></i>
-                  
-                  微博
-                </a>
-              </span>
-            
-              <span class="links-of-author-item">
                 <a href="https://gdliu.tuchong.com" target="_blank" title="图虫">
                   
                     <i class="fa fa-fw fa-camera"></i>
@@ -1404,24 +1387,6 @@
         
 
         
-        
-          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
-            <div class="links-of-blogroll-title">
-              <i class="fa  fa-fw fa-link"></i>
-              友情链接
-            </div>
-            <ul class="links-of-blogroll-list">
-              
-                <li class="links-of-blogroll-item">
-                  <a href="http://lgd.gd/" title="Planet X" target="_blank">Planet X</a>
-                </li>
-              
-                <li class="links-of-blogroll-item">
-                  <a href="https://qingzenholiu.github.io/" title="FLQ" target="_blank">FLQ</a>
-                </li>
-              
-            </ul>
-          </div>
         
         
 
@@ -1478,7 +1443,7 @@
 <div class="theme-info">
   Theme -
   <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
-    NexT.Mist
+    NexT.Pisces
   </a>
 </div>
 
@@ -1558,6 +1523,13 @@
 
   
   
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
 
   
   <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
