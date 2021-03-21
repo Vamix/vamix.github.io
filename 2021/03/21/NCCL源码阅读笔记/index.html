@@ -93,7 +93,7 @@
 <meta property="og:url" content="http://yoursite.com/2021/03/21/NCCL源码阅读笔记/index.html">
 <meta property="og:site_name" content="Planet X">
 <meta property="og:description" content="NCCL 源码阅读笔记最近简单读了一下NVIDIA Collective Communications Library (NCCL, pronounced “Nickel”) 的源代码。现将初步的一些收获总结一下。">
-<meta property="og:updated_time" content="2021-03-21T12:32:12.899Z">
+<meta property="og:updated_time" content="2021-03-21T12:39:04.406Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="NCCL源码阅读笔记">
 <meta name="twitter:description" content="NCCL 源码阅读笔记最近简单读了一下NVIDIA Collective Communications Library (NCCL, pronounced “Nickel”) 的源代码。现将初步的一些收获总结一下。">
@@ -386,7 +386,7 @@
       
 
       
-        <h3 id="NCCL-源码阅读笔记"><a href="#NCCL-源码阅读笔记" class="headerlink" title="NCCL 源码阅读笔记"></a>NCCL 源码阅读笔记</h3><p>最近简单读了一下NVIDIA Collective Communications Library (NCCL, pronounced “Nickel”) 的源代码。现将初步的一些收获总结一下。</p>
+        <h3 id="NCCL-源码阅读笔记"><a href="#NCCL-源码阅读笔记" class="headerlink" title="NCCL 源码阅读笔记"></a>NCCL 源码阅读笔记</h3><p>最近简单读了一下NVIDIA Collective Communications Library (NCCL, pronounced “Nickel”) 的源代码。现将初步的一些收获总结一下。 </p>
 <a id="more"></a> 
 <h4 id="代码框架"><a href="#代码框架" class="headerlink" title="代码框架"></a>代码框架</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">nccl-master-src</div><div class="line">├── Makefile</div><div class="line">├── include</div><div class="line">├── collectives 		<span class="comment">// 集合通信原语的实现</span></div><div class="line">├── graph						<span class="comment">// 检测网络拓扑结构</span></div><div class="line">├── transport				<span class="comment">// 与数据传输相关的函数实现</span></div><div class="line">├── bootstrap.cc		<span class="comment">// （我的理解是）很多内建的helper function</span></div><div class="line">├── channel.cc</div><div class="line">├── debug.cc</div><div class="line">├── enqueue.cc			<span class="comment">// 关于队列的操作</span></div><div class="line">├── group.cc				<span class="comment">// NCCL group API的实现</span></div><div class="line">├── init.cc					<span class="comment">// 初始化的代码</span></div><div class="line">├── proxy.cc				<span class="comment">// Proxy线程相关的代码</span></div><div class="line">└── transport.cc		<span class="comment">// 数据传输相关</span></div></pre></td></tr></table></figure>
 <p>目前我读到的一些代码以及相应的功能已经标注在文件树中。关于底层的数据传输、怎样建立socket通信的代码，主要集中在<code>transport.cc</code> <code>proxy.cc</code>以及<code>transport</code>文件夹中。关于上层的集合通信原语的实现，例如Allreduce, Allgather等，主要集中在<code>collectives</code>文件夹中。</p>
