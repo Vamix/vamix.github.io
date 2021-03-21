@@ -1,0 +1,1013 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="NCCL," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="NCCL 源码阅读笔记最近简单读了一下NVIDIA Collective Communications Library (NCCL, pronounced “Nickel”) 的源代码。现将初步的一些收获总结一下。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NCCL源码阅读笔记">
+<meta property="og:url" content="http://yoursite.com/2021/03/21/NCCL源码阅读笔记/index.html">
+<meta property="og:site_name" content="Planet X">
+<meta property="og:description" content="NCCL 源码阅读笔记最近简单读了一下NVIDIA Collective Communications Library (NCCL, pronounced “Nickel”) 的源代码。现将初步的一些收获总结一下。">
+<meta property="og:updated_time" content="2021-03-21T12:32:12.899Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="NCCL源码阅读笔记">
+<meta name="twitter:description" content="NCCL 源码阅读笔记最近简单读了一下NVIDIA Collective Communications Library (NCCL, pronounced “Nickel”) 的源代码。现将初步的一些收获总结一下。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"always"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2021/03/21/NCCL源码阅读笔记/"/>
+
+
+
+
+
+  <title> NCCL源码阅读笔记 | Planet X </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Planet X</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle">Life is Brilliant.</p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/homepage" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-research">
+          <a href="/categories/Research-Notes" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-book"></i> <br />
+            
+            Research notes
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/03/21/NCCL源码阅读笔记/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Guodong Liu">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Planet X">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Planet X" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                NCCL源码阅读笔记
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-03-21T20:30:00+08:00">
+                2021-03-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Research-Notes/" itemprop="url" rel="index">
+                    <span itemprop="name">Research Notes</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Research-Notes/Distributed-System/" itemprop="url" rel="index">
+                    <span itemprop="name">Distributed System</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2021/03/21/NCCL源码阅读笔记/" class="leancloud_visitors" data-flag-title="NCCL源码阅读笔记">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">Visitors </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="NCCL-源码阅读笔记"><a href="#NCCL-源码阅读笔记" class="headerlink" title="NCCL 源码阅读笔记"></a>NCCL 源码阅读笔记</h3><p>最近简单读了一下NVIDIA Collective Communications Library (NCCL, pronounced “Nickel”) 的源代码。现将初步的一些收获总结一下。</p>
+<a id="more"></a> 
+<h4 id="代码框架"><a href="#代码框架" class="headerlink" title="代码框架"></a>代码框架</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">nccl-master-src</div><div class="line">├── Makefile</div><div class="line">├── include</div><div class="line">├── collectives 		<span class="comment">// 集合通信原语的实现</span></div><div class="line">├── graph						<span class="comment">// 检测网络拓扑结构</span></div><div class="line">├── transport				<span class="comment">// 与数据传输相关的函数实现</span></div><div class="line">├── bootstrap.cc		<span class="comment">// （我的理解是）很多内建的helper function</span></div><div class="line">├── channel.cc</div><div class="line">├── debug.cc</div><div class="line">├── enqueue.cc			<span class="comment">// 关于队列的操作</span></div><div class="line">├── group.cc				<span class="comment">// NCCL group API的实现</span></div><div class="line">├── init.cc					<span class="comment">// 初始化的代码</span></div><div class="line">├── proxy.cc				<span class="comment">// Proxy线程相关的代码</span></div><div class="line">└── transport.cc		<span class="comment">// 数据传输相关</span></div></pre></td></tr></table></figure>
+<p>目前我读到的一些代码以及相应的功能已经标注在文件树中。关于底层的数据传输、怎样建立socket通信的代码，主要集中在<code>transport.cc</code> <code>proxy.cc</code>以及<code>transport</code>文件夹中。关于上层的集合通信原语的实现，例如Allreduce, Allgather等，主要集中在<code>collectives</code>文件夹中。</p>
+<h4 id="Start-from-NCCL-example"><a href="#Start-from-NCCL-example" class="headerlink" title="Start from NCCL example"></a>Start from NCCL example</h4><p>拿到源码有点无从下手，先看一个NCCL Doc中给出的example。根据example调用的API入手阅读源码。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span></span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">int</span> size = <span class="number">32</span>*<span class="number">1024</span>*<span class="number">1024</span>;</div><div class="line">  <span class="keyword">int</span> myRank, nRanks, localRank = <span class="number">0</span>;</div><div class="line"></div><div class="line">  <span class="comment">//initializing MPI</span></div><div class="line">  MPICHECK(MPI_Init(&amp;argc, &amp;argv));</div><div class="line">  MPICHECK(MPI_Comm_rank(MPI_COMM_WORLD, &amp;myRank));</div><div class="line">  MPICHECK(MPI_Comm_size(MPI_COMM_WORLD, &amp;nRanks));</div><div class="line"></div><div class="line">  <span class="comment">//calculating localRank based on hostname which is used in selecting a GPU</span></div><div class="line">  <span class="keyword">uint64_t</span> hostHashs[nRanks];</div><div class="line">  <span class="keyword">char</span> hostname[<span class="number">1024</span>];</div><div class="line">  getHostName(hostname, <span class="number">1024</span>);</div><div class="line">  hostHashs[myRank] = getHostHash(hostname);</div><div class="line">  MPICHECK(MPI_Allgather(MPI_IN_PLACE, <span class="number">0</span>, MPI_DATATYPE_NULL, hostHashs, <span class="keyword">sizeof</span>(<span class="keyword">uint64_t</span>), MPI_BYTE, MPI_COMM_WORLD));</div><div class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> p=<span class="number">0</span>; p&lt;nRanks; p++) &#123;</div><div class="line">     <span class="keyword">if</span> (p == myRank) <span class="keyword">break</span>;</div><div class="line">     <span class="keyword">if</span> (hostHashs[p] == hostHashs[myRank]) localRank++;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  ncclUniqueId id;</div><div class="line">  ncclComm_t comm;</div><div class="line">  <span class="keyword">float</span> *sendbuff, *recvbuff;</div><div class="line">  cudaStream_t s;</div><div class="line"></div><div class="line">  <span class="comment">//get NCCL unique ID at rank 0 and broadcast it to all others</span></div><div class="line">  <span class="keyword">if</span> (myRank == <span class="number">0</span>) ncclGetUniqueId(&amp;id);</div><div class="line">  MPICHECK(MPI_Bcast((<span class="keyword">void</span> *)&amp;id, <span class="keyword">sizeof</span>(id), MPI_BYTE, <span class="number">0</span>, MPI_COMM_WORLD));</div><div class="line"></div><div class="line">  <span class="comment">//picking a GPU based on localRank, allocate device buffers</span></div><div class="line">  CUDACHECK(cudaSetDevice(localRank));</div><div class="line">  CUDACHECK(cudaMalloc(&amp;sendbuff, size * <span class="keyword">sizeof</span>(<span class="keyword">float</span>)));</div><div class="line">  CUDACHECK(cudaMalloc(&amp;recvbuff, size * <span class="keyword">sizeof</span>(<span class="keyword">float</span>)));</div><div class="line">  CUDACHECK(cudaStreamCreate(&amp;s));</div><div class="line"></div><div class="line">  <span class="comment">//initializing NCCL</span></div><div class="line">  NCCLCHECK(ncclCommInitRank(&amp;comm, nRanks, id, myRank));</div><div class="line"></div><div class="line">  <span class="comment">//communicating using NCCL</span></div><div class="line">  NCCLCHECK(ncclAllReduce((<span class="keyword">const</span> <span class="keyword">void</span>*)sendbuff, (<span class="keyword">void</span>*)recvbuff, size, ncclFloat, ncclSum,</div><div class="line">        comm, s));</div><div class="line"></div><div class="line">  <span class="comment">//completing NCCL operation by synchronizing on the CUDA stream</span></div><div class="line">  CUDACHECK(cudaStreamSynchronize(s));</div><div class="line"></div><div class="line">  <span class="comment">//free device buffers</span></div><div class="line">  CUDACHECK(cudaFree(sendbuff));</div><div class="line">  CUDACHECK(cudaFree(recvbuff));</div><div class="line"></div><div class="line">  <span class="comment">//finalizing NCCL</span></div><div class="line">  ncclCommDestroy(comm);</div><div class="line"></div><div class="line">  <span class="comment">//finalizing MPI</span></div><div class="line">  MPICHECK(MPI_Finalize());</div><div class="line"></div><div class="line">  <span class="built_in">printf</span>(<span class="string">"[MPI Rank %d] Success \n"</span>, myRank);</div><div class="line">  <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>可以看到，这段代码先是执行了MPI相关的一些操作。调用MPI主要是为了在NCCL连接还未建立时，在设备之间传输一些额外信息，比如<code>ncclUniqueId</code>。然后是CUDA相关的一些操作，分配内存、创建stream等等。真正涉及到NCCL的代码，在上述example中只有两个API：<code>ncclCommInitRank</code>，<code>ncclAllReduce</code>。（除去<code>ncclUniqueId</code>和<code>ncclCommDestroy</code>）。</p>
+<p>因此，我们就来看看这两个API是如何调用的好了。</p>
+<h4 id="初始化Communicator：-ncclCommInitRank"><a href="#初始化Communicator：-ncclCommInitRank" class="headerlink" title="初始化Communicator： ncclCommInitRank"></a>初始化Communicator： <code>ncclCommInitRank</code></h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function">ncclResult_t <span class="title">ncclCommInitRank</span><span class="params">(ncclComm_t  comm, <span class="keyword">int</span> nranks, ncclUniqueId commId, <span class="keyword">int</span> rank)</span></span></div></pre></td></tr></table></figure>
+<p>要使用NCCL进行通信，每个设备上都要有一个NCCL Communicator object。属于同一个Communicator的各个设备具有相同的<code>ncclUniqueId</code>以及不同的<code>rank</code>。这个API用于在一个设备上初始化Communicator object。在设置不同设备上的communicator时，这个API必须被不同的线程/进程调用。或者使用<code>ncclGroupStart/ncclGroupEnd</code> 来通过一个线程/进程设置多个设备的Communicator。</p>
+<ul>
+<li><p><code>(init.cc) ncclCommInitRank</code>-&gt; <code>(init.cc) ncclCommInitRankDev</code> </p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">ncclCommInitRankDev()&#123;</div><div class="line">	<span class="comment">// rank == 0 时,执行bootstrapCreateRoot</span></div><div class="line">	<span class="keyword">if</span> (env &amp;&amp; myrank == <span class="number">0</span>)</div><div class="line">    bootstrapCreateRoot();</div><div class="line">	<span class="comment">// 每个rank都要执行</span></div><div class="line">	ncclCommInitRankSync();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p><code>(init.cc) ncclCommInitRankDev</code> -&gt;<code>bootstrapCreateRoot</code></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">bootstrapCreateRoot()&#123;</div><div class="line">  <span class="comment">// 此处用来create listen socket的Addr是Communicator 的UniqID</span></div><div class="line">  createListenSocket(&amp;listenFd, connectAddr);</div><div class="line">  <span class="comment">// 创建监听线程</span></div><div class="line">  pthread_create(&amp;thread, <span class="literal">NULL</span>, bootstrapRoot, (<span class="keyword">void</span>*)(<span class="keyword">uint64_t</span>)listenFd);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p><code>(init.cc) ncclCommInitRankDev</code> -&gt;<code>ncclCommInitRankSync</code></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function">ncclResult_t <span class="title">ncclCommInitRankSync</span><span class="params">(ncclComm_t* newcomm, <span class="keyword">int</span> nranks, ncclUniqueId commId, <span class="keyword">int</span> myrank, <span class="keyword">int</span> cudaDev)</span> </span>&#123;</div><div class="line">  initTransportsRank(*newcomm, &amp;commId);</div><div class="line">  devCommSetup(*newcomm);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p><code>initTransportsRank</code> 这个函数对数据传输做了大量的初始化工作。包括：</p>
+<ul>
+<li><p>建立设备之间的socket连接</p>
+</li>
+<li><p>检测系统里的设备以及设备之间的拓扑结构</p>
+</li>
+<li><p>计算当前系统中的RING、TREE、COLLNET结构</p>
+<blockquote>
+<p>CollNet is a new algorithm in NCCL that allows GPUs on multiple nodes to do in-network reductions.</p>
+</blockquote>
+</li>
+<li><p>建立每个设备之间的连接。peer之间的通信方式有三种：</p>
+<ul>
+<li>p2p transport (uses CUDA direct access between GPUs, using NVLink or PCI.)</li>
+<li>shared memory transport (using host memory.)</li>
+<li>net transport (InfiniBand or IP sockets.)</li>
+</ul>
+<p>在<code>ncclTransportP2pSetup() -&gt; selectTransport()</code>中，会选择各个peer之间适用的通信方式。对于p2p和shm通信方式，在建立连接后，可以直接进行数据传输（通过GPU peer-to-peer或者host memory），而通过network连接的peer，还需要proxy线程来通过socket进行数据传输。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="集合通信原语的实现"><a href="#集合通信原语的实现" class="headerlink" title="集合通信原语的实现"></a>集合通信原语的实现</h4><p>在完成设备的Communicator初始化后，就可以调用集合通信的相关原语。在这里我们以Allreduce为例，分析集合通信原语的实现逻辑。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">NCCL_API(ncclResult_t, ncclAllReduce, <span class="keyword">const</span> <span class="keyword">void</span>* sendbuff, <span class="keyword">void</span>* recvbuff, <span class="keyword">size_t</span> count,</div><div class="line">    ncclDataType_t datatype, ncclRedOp_t op, ncclComm* comm, cudaStream_t stream);</div><div class="line"><span class="function">ncclResult_t <span class="title">ncclAllReduce</span><span class="params">(<span class="keyword">const</span> <span class="keyword">void</span>* sendbuff, <span class="keyword">void</span>* recvbuff, <span class="keyword">size_t</span> count,</span></span></div><div class="line">    ncclDataType_t datatype, ncclRedOp_t op, ncclComm* comm, cudaStream_t stream) &#123;</div><div class="line">  NVTX3_FUNC_RANGE_IN(nccl_domain);</div><div class="line">  <span class="keyword">struct</span> ncclInfo info = &#123; ncclFuncAllReduce, <span class="string">"AllReduce"</span>,</div><div class="line">    sendbuff, recvbuff, count, datatype, op, <span class="number">0</span>, comm, stream, <span class="comment">/* Args */</span></div><div class="line">    ALLREDUCE_CHUNKSTEPS, ALLREDUCE_SLICESTEPS &#125;;</div><div class="line">  <span class="keyword">return</span> ncclEnqueueCheck(&amp;info);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>可以看到，调用<code>ncclAllReduce</code>时，所有的变量被存到一个<code>ncclInfo</code> 结构体中，然后通过<code>ncclEnqueueCheck</code> 将这个结构体插入到队列中。</p>
+<p><strong><code>ncclEnqueueCheck</code></strong> 执行了以下操作：</p>
+<ul>
+<li><p><code>ncclSaveKernel</code>：</p>
+<p>对将要执行的操作进行一些准备工作。主要是调用<code>computeColl()</code>计算<code>ncclProxyArgs</code> 这个结构体中的信息。这个结构体将被用于初始化Proxy。并且这个函数也计算了将要launch的 CUDA kernel的参数。</p>
+</li>
+<li><p><code>ncclBarrierEnqueue</code> <code>ncclBarrierEnqueueWait</code>：</p>
+<p>launch所有的 CUDA kernel，通过插入barrier的方式设置kernel之间的依赖关系。最后，通过<code>ncclProxyStart()</code> 启动Proxy线程。</p>
+</li>
+</ul>
+<p>AllReduce的具体执行逻辑：<code>all_reduce.h</code> 中，有9种实现。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">三种算法：NCCL_ALGO_RING, NCCL_ALGO_TREE, NCCL_ALGO_COLLNET</div><div class="line">三种协议：NCCL_PROTO_SIMPLE, NCCL_PROTO_LL, NCCL_PROTO_LL128</div></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 以NCCL_ALGO_RING, NCCL_PROTO_SIMPLE的实现为例</span></div><div class="line"><span class="comment">// 首先从args这个结构体中获取当前操作所需要的参数，例如当前的channel，数据传输的chunk size等。</span></div><div class="line"><span class="comment">// 实例化一个ncclPrimitives类</span></div><div class="line">ncclPrimitives&lt;UNROLL, ALLREDUCE_CHUNKSTEPS/ALLREDUCE_SLICESTEPS, ALLREDUCE_SLICESTEPS, T, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, FUNC&gt; prims(tid, nthreads, &amp;ring-&gt;prev, &amp;ring-&gt;next, thisOutput, stepSize, channel, comm, ncclShmem-&gt;ptrs, <span class="number">0</span>);</div></pre></td></tr></table></figure>
+<ul>
+<li><p>一个非常重要的类：<code>ncclPrimitives</code> 。这个类实现了各类通信原语。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">define</span> SYNC_GROUP 8</span></div><div class="line"><span class="keyword">static_assert</span>(NSEND &lt; SYNC_GROUP &amp;&amp; NRECV &lt; SYNC_GROUP, <span class="string">"Not enough threads to cover all peers"</span>);</div><div class="line"></div><div class="line"><span class="keyword">int</span> g = tid / SYNC_GROUP;</div><div class="line"><span class="keyword">int</span> ng = nthreads / SYNC_GROUP;</div><div class="line">index = tid % SYNC_GROUP;</div><div class="line"></div><div class="line"><span class="keyword">if</span> (g == <span class="number">0</span>) &#123;</div><div class="line"><span class="keyword">if</span> (index &lt; nrecv) role |= ROLE_WAIT_RECV;</div><div class="line"><span class="keyword">if</span> (index == nrecv) role |= ROLE_SRC;</div><div class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (g == <span class="number">1</span>) &#123;</div><div class="line"><span class="keyword">if</span> (index &lt; nsend) role |= ROLE_WAIT_SEND;</div><div class="line"><span class="keyword">if</span> (index == nsend) role |= ROLE_DST;</div><div class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (g == ng - <span class="number">2</span>) &#123;</div><div class="line"><span class="keyword">if</span> (index &lt; nrecv) role |= ROLE_POST_RECV;</div><div class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (g == ng - <span class="number">1</span>) &#123;</div><div class="line"><span class="keyword">if</span> (index &lt; nsend) role |= ROLE_POST_SEND;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>根据<code>tid（thread ID）</code>、<code>nthreads</code>  以及<code>SYNC_GROUP</code> 就能确定当前设备的角色。这些角色分别是什么意思？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">ROLE_WAIT_RECV</div><div class="line">ROLE_SRC</div><div class="line">ROLE_WAIT_SEND</div><div class="line">ROLE_DST</div><div class="line">ROLE_POST_RECV</div><div class="line">ROLE_POST_SEND</div></pre></td></tr></table></figure>
+<p>比较巧妙的设计是，通过设计一个GenericOp，改变其6个input的值就能使用相同的代码实现多种不同的功能。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">int</span> DIRECTRECV, <span class="keyword">int</span> DIRECTSEND, <span class="keyword">int</span> RECV, <span class="keyword">int</span> SEND, <span class="keyword">int</span> SRC, <span class="keyword">int</span> DST&gt;</div><div class="line"><span class="keyword">inline</span> __<span class="function">device__ <span class="keyword">void</span></span></div><div class="line"><span class="title">GenericOp</span><span class="params">(<span class="keyword">const</span> T* srcPtr, T* dstPtr, <span class="keyword">int</span> nelem, <span class="keyword">ssize_t</span> directOffset)</span></div></pre></td></tr></table></figure>
+<p>在GenericOp中，调用send和recv之类的操作时，会修改<code>ncclConnInfo</code> 这个结构体中的<code>void* *ptrsFifo;</code> 以及<code>int *sizesFifo;</code> 这两个数据结构，这两个结构中存储着要传输的数据地址以及对应的数据大小。在 netTransport的proxy相关的函数中，会检查这个队列，进行传输。</p>
+</li>
+</ul>
+<h4 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h4><ul>
+<li><p>异步模式是如何被启用的？</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">ncclAsyncMode</span><span class="params">()</span> </span>&#123;</div><div class="line">  <span class="keyword">return</span> ncclGroupMode &gt; <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>可以看到，异步模式仅在 <code>ncclGroupMode&gt;0</code>时启用。而这个变量是被group操作相关的函数所修改的。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function">ncclResult_t <span class="title">ncclGroupStart</span><span class="params">()</span> </span>&#123;</div><div class="line">  NVTX3_FUNC_RANGE_IN(nccl_domain);</div><div class="line">  <span class="keyword">if</span> (ncclGroupMode == <span class="number">0</span>) &#123;</div><div class="line">    <span class="built_in">memset</span>(ncclGroupArgs, <span class="number">0</span>, <span class="keyword">sizeof</span>(<span class="keyword">struct</span> ncclAsyncArgs)*MAX_ASYNC_OPS);</div><div class="line">  &#125;</div><div class="line">  ncclGroupMode++;</div><div class="line">  <span class="keyword">return</span> ncclSuccess;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>可以看出，每次使用group操作时，都会启用异步模式。异步模式下，很多操作不再阻塞等待结果返回。因此同一个函数的同步实现和异步实现会有些许不同。</p>
+</li>
+<li><p>关于NCCL call在GPU上执行的方式：</p>
+<blockquote>
+<p>The NCCL call returns when the operation has been effectively enqueued to the given stream, or returns an error. The collective operation is then executed asynchronously on the CUDA device.</p>
+</blockquote>
+<p>类似于TensorFlow中，各个operator的执行流程。先是enqueue到一个给定的stream。然后在GPU上异步地执行，The operation status can be queried using standard CUDA semantics, for example, calling <code>cudaStreamSynchronize</code> or using CUDA events。</p>
+</li>
+<li><p>以broadcast为例分析集合通信原语的具体逻辑：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> (<span class="keyword">ssize_t</span> gridOffset = <span class="number">0</span>; gridOffset &lt; size; gridOffset += loopSize) &#123;</div><div class="line">  <span class="keyword">int</span> realChunkSize = min(chunkSize, DIVUP(size-gridOffset,nChannels));</div><div class="line">  ALIGN_SIZE(realChunkSize, nthreads*<span class="keyword">sizeof</span>(<span class="keyword">uint64_t</span>)/<span class="keyword">sizeof</span>(T));</div><div class="line">  <span class="keyword">ssize_t</span> offset = gridOffset + bid*realChunkSize;</div><div class="line">  <span class="keyword">int</span> nelem = min(realChunkSize, size-offset);</div><div class="line"></div><div class="line">  <span class="keyword">if</span> (rank == root) &#123;</div><div class="line">    <span class="comment">// 如果是root，就要向其他设备广播当前设备buffer中的数据</span></div><div class="line">    <span class="keyword">if</span> (thisInput == thisOutput) &#123;</div><div class="line">      prims.send(thisInput+offset, nelem);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">      prims.copySend(thisInput+offset, thisOutput+offset, nelem);</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  <span class="comment">// 如果不是root，就要从其他节点接收root传来的数据。因为是ring结构，所以root发来的数据可能在环上依次传递，并不一定直接接收来自root的数据。</span></div><div class="line">  <span class="keyword">else</span> <span class="keyword">if</span> (nextRank == root) &#123;</div><div class="line">    <span class="comment">//如果是root之前的最后一个设备，接收即可，不再发送。</span></div><div class="line">    prims.recv(thisOutput+offset, nelem);</div><div class="line">  &#125; <span class="keyword">else</span> &#123;</div><div class="line">    <span class="comment">// 否则，不仅要receive，还要copy,send.</span></div><div class="line">    prims.recvCopySend(thisOutput+offset, nelem);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>proxy可以看做是在CPU端运行了一个当前GPU跟其他GPU通信的代理，由proxy来决定通过何种方式传输数据。（采用netTransport的）Proxy会运行一个驻留线程。循环检查队列中有无op。op-&gt;progress则是每个op对应的proxy操作。</p>
+</li>
+<li><p>跨CPU的数据通信可以采用Socket、Infiniband等机制。</p>
+</li>
+<li><p>GPU上的kernel内部也有一个（待传输数据的）队列。这个队列是怎样维护的？</p>
+<p>这个队列不需要维护。在launch kernel之后，kernel会计算要传输的数据的地址和大小，修改<code>ncclConnInfo</code> 这个结构体中的数据队列指针<code>*tail</code>，然后调用同步函数，等待proxy线程传输刚刚添加到<code>*tail</code>中的数据。</p>
+<p>因此，数据传输过程其实是GPU上的NCCL kernel跟CPU上的Proxy线程协同完成的。</p>
+<p>Proxy线程中与数据传输有关的三个函数是</p>
+<p><code>ncclNetIrecv</code>：Proxy从网络收到数据</p>
+<p><code>ncclNetIsend</code>：Proxy发送数据到网络</p>
+<p><code>ncclNetIflush</code>: Proxy将数据从CPU传到GPU</p>
+<p>在NCCL中没有这三个函数的实现，应该是调用了外部API。</p>
+</li>
+<li><p>数据怎样从一个GPU传输到同一个节点的另一个GPU？</p>
+<p>Peer-to-peer, PCI+host memory</p>
+</li>
+<li><p>数据怎样从一个GPU传输到另一个节点的GPU？</p>
+<p>Socket, InfiniBand</p>
+</li>
+</ul>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>总的来说，NCCL的工作流程如下：</p>
+<ol>
+<li><p>首先，每个要参与数据传输的GPU都要调用<strong><code>ncclCommInitRank</code></strong>创建一个与其<code>rank</code>对应的Communicator，同一个communication group中的每个communicator具有相同的unique ID。</p>
+</li>
+<li><p>当每个设备调用<code>ncclCommInitRank</code>时，设备之间会交换一些信息，例如各自的IP，bus ID等。然后检测整个系统中的网络拓扑结构。</p>
+</li>
+<li><p>有了网络拓扑结构，NCCL会进一步搜索当前网络中最佳的RING、TREE、COLLNET图结构。</p>
+</li>
+<li><p>有了设备之间的图结构信息，就可以在存在通路的设备之间建立点对点的连接。主要有三种连接方式：p2p，shared memory以及network。采用哪种方式取决于这两个节点之间支持怎样的连接方式。</p>
+<p>以上就是初始化阶段的所有准备工作。</p>
+</li>
+<li><p>初始化完成后，就可以调用集合通信原语。例如<code>ncclAllReduce</code>。集合通信函数会被enqueue到一个CUDA stream上，在GPU上异步执行。</p>
+</li>
+<li><p>接下来在CPU上启动Proxy线程，作为GPU上集合通信kernel的代理，与GPU kernel协同完成与其他设备之间的数据传输。GPU kernel负责计算所需传输的数据的地址以及数据量大小，而Proxy线程负责完成实际的数据传输。对于采用p2pTransport 以及shmTransport的设备，在建立连接后可以直接传输数据，对于采用netTransport的设备，则需要通过socket进行数据传输。</p>
+</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/NCCL/" rel="tag"># NCCL</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/09/01/What-drives-performance-improvement-of-Deep-Learning-Models-in-recent-years/" rel="next" title="What drives performance improvement of Deep Learning Models in recent years">
+                <i class="fa fa-chevron-left"></i> What drives performance improvement of Deep Learning Models in recent years
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjQ2OS8xMzAwNA=="></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Guodong Liu" />
+          <p class="site-author-name" itemprop="name">Guodong Liu</p>
+          <p class="site-description motion-element" itemprop="description">Guodong's personal page.</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">tags</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/vamix" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://gdliu.tuchong.com" target="_blank" title="图虫">
+                  
+                    <i class="fa fa-fw fa-camera"></i>
+                  
+                  图虫
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+        
+
+
+<div id="kong">
+
+</div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#NCCL-源码阅读笔记"><span class="nav-number">1.</span> <span class="nav-text">NCCL 源码阅读笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#代码框架"><span class="nav-number">1.1.</span> <span class="nav-text">代码框架</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Start-from-NCCL-example"><span class="nav-number">1.2.</span> <span class="nav-text">Start from NCCL example</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#初始化Communicator：-ncclCommInitRank"><span class="nav-number">1.3.</span> <span class="nav-text">初始化Communicator： ncclCommInitRank</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#集合通信原语的实现"><span class="nav-number">1.4.</span> <span class="nav-text">集合通信原语的实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#其他"><span class="nav-number">1.5.</span> <span class="nav-text">其他</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#总结"><span class="nav-number">1.6.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        ﻿<div >
+  <span class="with-love">
+    <i class="fa fa- "></i>
+  </span>
+</div>
+
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-hand-o-right"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Guodong Liu</span>
+</div>
+
+
+<div class="theme-info"> 
+  <div class="powered-by" id="days" style="float:left;">
+  <script src="https://cdn.bootcss.com/moment.js/2.17.0/moment.min.js">
+  </script>
+  <script>
+    var begin = moment([2017,01,08]); 
+    var now = moment(); 
+      document.getElementById('days').innerHTML ="Planet X 已运行 "+now.diff(begin,'days')+" 天"
+  </script>
+  </div>
+
+  <div class="powered-by" style="float:left;">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+  </div>
+
+  <div class="powered-by" style="float:left;">
+    Theme -
+    <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+      NexT.Pisces
+    </a>
+  </div>
+
+  <div class="cnzz" style="float:left;">
+  <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261243839'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261243839' type='text/javascript'%3E%3C/script%3E"));</script>
+  </div>
+
+</div>
+
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("0gOzOrUU5JDN6dQ1CGoxdHSC-gzGzoHsz", "4bLq9i04lAPq5KXfRC0fdlfg");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+
+</body>
+</html>
