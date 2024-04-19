@@ -20,7 +20,7 @@ My research interest lies in the intersection of machine learning and systems. T
 **Guodong Liu**, Youshan Miao, Zhiqi Lin, Xiaoxiang Shi, Saeed Maleki, Fan Yang, Yungang Bao, Sa Wang  
 <span style="color:green; font-style:italic">EuroSys 2024</span>  
 
-<img src="/images/publications/aceso-overview.png" />
+<img src="/images/publications/aceso-overview.jpg" />
 
 Aceso is a scalable parallel-mechanism auto-configuring system that operates iteratively. For a given parallel configuration, Aceso identifies a performance bottleneck and then, by summarizing all possible configuration adjustments with their resource consumption changes, infers their performance impacts to the bottleneck and selects one that mitigates the bottleneck. Aceso significantly reduces configuration searching cost by taking the approach of resolving one bottleneck at a time. We implemented and tested Aceso on representative DNN models. Evaluations show that it can scale to 1K-layer models. Compared to state-of-the-art systems, Aceso achieves up to 1.33x throughput improvement with less than 5% of the searching cost.
 
@@ -28,7 +28,7 @@ Aceso is a scalable parallel-mechanism auto-configuring system that operates ite
 **Guodong Liu**, Sa Wang, Yungang Bao  
 <span style="color:green; font-style:italic">PACT 2021</span>  
 
-<img src="/images/publications/seer-overview.png"/>
+<img src="/images/publications/seer-overview.jpg"/>
 
 SEER is an iteration time prediction model for CNNs, targeting on GPU platforms. We propose to categorize convolution kernels into three different types: Compute-bound, DRAM-bound and Under-utilized, then we build performance model for each type respectively. We combined analytical models and learning-based models to make the performance model accurate and in line with GPU execution model. Experimental results show that, our model achieves 14.71% prediction error on convolution kernels and up to 1.79% prediction error for the overall computation time in one iteration of common CNNs. Besides, when used for selecting the best convolution algorithm, our model shows 7.14% lower error rate than cuDNN's official algorithm picker.
 
