@@ -37,7 +37,7 @@ SEER is an iteration time prediction model for CNNs, targeting on GPU platforms.
 ## Featured Article
 **March 2022**: Interviewed by Microsoft Research Asia:
 
-[![](/images/publications/interview.png)](https://www.msra.cn/zh-cn/news/outreach-articles/星跃重洋-刘国栋：非典型理工男在微软亚洲研究)
+[![](/images/publications/interview.jpg)](https://www.msra.cn/zh-cn/news/outreach-articles/星跃重洋-刘国栋：非典型理工男在微软亚洲研究)
 
 ## Arts
 **July 2022**: My painting "World on Silicon" got selected as cover of the journal ***Science Writing Review***:
