@@ -7,58 +7,40 @@ redirect_from:
   - /resume
 ---
 
-{% include base_path %}
+My full CV is available here: [**[CV]**](/files/guodong_liu.pdf)
 
 Education
 ======
-* Ph.D in Version Control Theory, GitHub University, 2018 (expected)
-* M.S. in Jekyll, GitHub University, 2014
-* B.S. in GitHub, GitHub University, 2012
+* Ph.D. in **Institute of Computing Technology, Chinese Academy of Sciences**, 2019-present
+* B.Eng. in **University of Chinese Academy of Sciences**, 2015-2019
 
-Work experience
+Experience
 ======
-* Spring 2024: Academic Pages Collaborator
-  * Github University
-  * Duties includes: Updates and improvements to template
-  * Supervisor: The Users
+* March 2021 - September 2022: **Microsoft Research Asia**
+  * Research intern at System Research Group
+  * Supervisor: Youshan Miao and Saeed Maleki
 
-* Fall 2015: Research Assistant
-  * Github University
-  * Duties included: Merging pull requests
-  * Supervisor: Professor Hub
-
-* Summer 2015: Research Assistant
-  * Github University
-  * Duties included: Tagging issues
-  * Supervisor: Professor Git
+* June 2018 - May 2019: **Institute of Computing Technology, CAS**
+  * Research assistant at Center for Advanced Computer Systems
+  * Supervisor: Yungang Bao and Sa Wang
   
-Skills
-======
-* Skill 1
-* Skill 2
-  * Sub-skill 2.1
-  * Sub-skill 2.2
-  * Sub-skill 2.3
-* Skill 3
-
 Publications
 ======
-  <ul>{% for post in site.publications reversed %}
-    {% include archive-single-cv.html %}
-  {% endfor %}</ul>
+* **Aceso: Efficient Parallel DNN Training through Iterative Bottleneck Alleviation**  
+  * **Guodong Liu**, Youshan Miao, Zhiqi Lin, Xiaoxiang Shi, Saeed Maleki, Fan Yang, Yungang Bao, Sa Wang  
+  * <span style="color:green; font-style:italic">EuroSys 2024</span>  
+
+* **SEER: A Time Prediction Model for CNNs from GPU Kernel's View**  
+  * **Guodong Liu**, Sa Wang, Yungang Bao  
+  * <span style="color:green; font-style:italic">PACT 2021</span>  
+
+* **Breaking the computation and communication abstraction barrier in distributed machine learning workloads**  
+  * Abhinav Jangda, Jun Huang, **Guodong Liu**, Amir Hossein Nodehi Sabet, Saeed Maleki, Youshan Miao, Madanlal Musuvathi, Todd Mytkowicz, Olli Saarikivi  
+  * <span style="color:green; font-style:italic">ASPLOS 2022</span>  
+
+* **Superscaler: Supporting flexible DNN parallelization via a unified abstraction**  
+  * Zhiqi Lin, Youshan Miao, **Guodong Liu**, Xiaoxiang Shi, Quanlu Zhang, Fan Yang, Saeed Maleki, Yi Zhu, Xu Cao, Cheng Li, Mao Yang, Lintao Zhang, Lidong Zhou  
+  * <span style="color:green; font-style:italic">Preprint 2023</span>  
+
+
   
-Talks
-======
-  <ul>{% for post in site.talks reversed %}
-    {% include archive-single-talk-cv.html  %}
-  {% endfor %}</ul>
-  
-Teaching
-======
-  <ul>{% for post in site.teaching reversed %}
-    {% include archive-single-cv.html %}
-  {% endfor %}</ul>
-  
-Service and leadership
-======
-* Currently signed in to 43 different slack teams
