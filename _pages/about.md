@@ -8,11 +8,12 @@ redirect_from:
 ---
 
 
-My name is Guodong Liu, I am currently a Ph.D. candidate in the [Institute of Computing Technology (ICT)](http://english.ict.cas.cn), [Chinese Academy of Sciences (CAS)](http://english.cas.cn),  supervised by [Prof. Yungang Bao](http://acs.ict.ac.cn/baoyg/) and [Prof. Sa Wang](https://sooner.github.io). I received my bachelor degree in Computer Science from [University of Chinese Academy of Sciences (UCAS)](http://english.ucas.ac.cn) in 2019. My full CV is available here: [**[CV]**](/files/guodong_liu.pdf)
+My name is Guodong Liu, I received my PhD from [Institute of Computing Technology (ICT)](http://english.ict.cas.cn), [Chinese Academy of Sciences (CAS)](http://english.cas.cn), in 2025, supervised by [Prof. Yungang Bao](http://acs.ict.ac.cn/baoyg/) and [Prof. Sa Wang](https://sooner.github.io). I received my bachelor degree in Computer Science from [University of Chinese Academy of Sciences (UCAS)](http://english.ucas.ac.cn) in 2019. 
+
+Currently I work at ByteDance, building large-scale machine learning system for recommendation models.
+My full CV is available here: [**[CV]**](/files/guodong_liu.pdf)
 
 My research interest lies in the intersection of machine learning and systems. This website is for posting some of my surveys and thoughts on recent research. If you are interested on similar topics, please contact me and have a talk. 
-
-<span style="color:green; font-style:italic">I am on the job market for 2025. Please feel free to reach out if you have openings.</span>  
 
 ## Selected Research
 
